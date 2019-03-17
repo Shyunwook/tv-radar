@@ -6,10 +6,7 @@ var _express = _interopRequireDefault(require("express"));
 
 var _redisFunc = _interopRequireDefault(require("../src/redis-func.js"));
 
-var _redis = _interopRequireDefault(require("redis"));
-
-// let cacheClient = redis.createClient(6379,'172.31.29.112');
-var cacheClient = _redis.default.createClient(6379, '127.0.0.1');
+var _database = _interopRequireDefault(require("../src/database.js"));
 
 var router = _express.default.Router();
 /* GET users listing. */

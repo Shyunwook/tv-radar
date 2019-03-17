@@ -12,14 +12,11 @@ var _express = _interopRequireDefault(require("express"));
 
 var _moment = _interopRequireDefault(require("moment"));
 
-var _redis = _interopRequireDefault(require("redis"));
+var _database = _interopRequireDefault(require("../src/database.js"));
 
 var _common = _interopRequireDefault(require("../src/common.js"));
 
 var router = _express.default.Router();
-
-// let cacheClient = redis.createClient(6379,'172.31.29.112');
-var cacheClient = _redis.default.createClient(6379, '127.0.0.1');
 
 var wrap = function wrap(asyncFn) {
   // FIXME: Promise와 catch를 이용하면 더 간결해질 것 같습니다.
@@ -89,7 +86,7 @@ function () {
             _context2.next = 5;
             return function () {
               return new Promise(function (resolve, reject) {
-                cacheClient.sort("dateList", "alpha", function (err, result) {
+                _database.default.sort("dateList", "alpha", function (err, result) {
                   initial_day = result[0];
 
                   if (result.indexOf(period.dateFrom) > 0) {
@@ -110,7 +107,7 @@ function () {
             }
 
             _context2.next = 9;
-            return _common.default.getRedisData(period, cacheClient);
+            return _common.default.getRedisData(period, _database.default);
 
           case 9:
             raw = _context2.sent;
@@ -128,7 +125,7 @@ function () {
               dateTo: (0, _moment.default)(initial_day).add(-1, 'days').format("YYYY-MM-DD")
             };
             _context2.next = 17;
-            return _common.default.getRedisData(period, cacheClient);
+            return _common.default.getRedisData(period, _database.default);
 
           case 17:
             redis_raw = _context2.sent;

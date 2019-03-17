@@ -1,13 +1,10 @@
 import express from 'express';
 import moment from 'moment';
-import redis from 'redis';
+import cacheClient from '../src/database.js';
 
 let router = express.Router();
 
 import FUNC from '../src/common.js';
-
-// let cacheClient = redis.createClient(6379,'172.31.29.112');
-let cacheClient = redis.createClient(6379,'127.0.0.1');
 
 const wrap = asyncFn => {
 // FIXME: Promise와 catch를 이용하면 더 간결해질 것 같습니다.
