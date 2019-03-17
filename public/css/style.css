@@ -1,0 +1,215 @@
+.date_picker{
+  background: white;
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.modal-mask {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, .5);
+  display: table;
+  /* transition: opacity .3s ease; */
+}
+
+.modal-wrapper {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.modal-container {
+  width: 600px;
+  max-height: 450px;
+  overflow: scroll;
+  margin: 0px auto;
+  padding: 20px 30px;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+  /* transition: all .3s ease; */
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.modal-header h3 {
+  margin-top: 0;
+  color: #42b983;
+}
+
+.modal-body {
+  margin: 20px 0;
+}
+
+.modal-default-button {
+  float: right;
+}
+
+/*
+ * The following styles are auto-applied to elements with
+ * transition="modal" when their visibility is toggled
+ * by Vue.js.
+ *
+ * You can easily play with the modal transition by editing
+ * these styles.
+ */
+
+.modal-enter {
+  opacity: 0;
+}
+
+.modal-leave-active {
+  opacity: 0;
+}
+
+.modal-enter .modal-container,
+.modal-leave-active .modal-container {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+.history{
+  margin-bottom: 40px;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.625;
+    color: #666;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+html body{
+  font-size: 14px;
+}
+
+.gs_title{
+  text-align: center;
+}
+
+html body .shop_category{
+  display: none;
+  margin-top: 15px;
+}
+
+.content{
+  padding-top: 25px;
+}
+
+.schedule_name {
+  /* text-overflow:ellipsis;
+  white-space:nowrap;
+  word-wrap:normal;
+  width:100px;
+  overflow:hidden; */
+}
+
+.other_table{
+  background: white;
+  box-shadow : 0px 2px 5px 0px rgba(0, 0, 0, 0.1);
+}
+
+.gs_table_box{
+  background: #01a6b4;
+  padding: 10px;
+  color: white;
+  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.1);
+  max-height: 60vh;
+  overflow: scroll;
+}
+
+.gs_table_box .gs_table{
+  color: white;
+  font-size: 12px;
+  width: 100%;
+  text-align : center;
+}
+
+.gs_table_box .gs_table td{
+  padding: 10px 4px;
+}
+
+
+td{
+  /* overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis; */
+}
+
+
+.datepicker-here{
+  width: 210px;
+  margin-right: 15px;
+}
+
+.category_filter{
+  margin-right: 15px;
+}
+
+.check_group{
+  margin-bottom: 15px;
+}
+
+.help{
+  border: 1px solid #00a7b5;
+  color: #00a7b5;
+  padding: 6px;
+  border-radius: 4px;
+  margin-left: 10px;
+}
+
+.title{
+  font-size: 20px;
+}
+
+.sub_title{
+  margin-top: 10px;
+  font-size: 15px;
+}
+
+/* ----- Table ----- */
+.table {
+    margin: 0;
+    table-layout: fixed;
+}
+
+.wi-11{
+  width: 11%;
+}
+
+.wi-12{
+  width: 12%
+}
+
+.wi-10{
+  width: 10%
+}
+
+.wi-8{
+  width: 8%;
+}
+
+.main{
+  padding-top: 116px;
+  min-height: 100vh
+}
+
+.btn-zoey{
+  color: white !important;
+  background-color: #00a7b5 !important;
+}
+
+.page-wrapper{
+  background: #e5e5e5;
+  overflow: hidden;
+}
+
+table.v-table tbody td:first-child, table.v-table tbody td:not(:first-child), table.v-table tbody th:first-child, table.v-table tbody th:not(:first-child), table.v-table thead td:first-child, table.v-table thead td:not(:first-child), table.v-table thead th:first-child, table.v-table thead th:not(:first-child) {
+  padding: 0 10px
+}

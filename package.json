@@ -1,0 +1,47 @@
+{
+  "name": "tv-radar",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "clean": "rm -rf build public/js/bundle.js",
+    "start": "node ./build/bin/www.js",
+    "build": "babel server --out-dir build --copy-files && ./node_modules/.bin/webpack"
+  },
+  "dependencies": {
+    "air-datepicker-en": "^2.2.5",
+    "body-parser": "^1.18.3",
+    "busy-load": "^0.1.2",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "ejs": "~2.5.7",
+    "express": "~4.16.0",
+    "fs": "0.0.1-security",
+    "http-errors": "~1.6.2",
+    "jquery": "^3.3.1",
+    "lodash": "^4.17.11",
+    "moment": "^2.24.0",
+    "morgan": "~1.9.0",
+    "p-loading": "^1.2.0",
+    "redis": "^2.8.0",
+    "request": "^2.88.0",
+    "vue": "^2.6.9",
+    "vuetify": "^1.5.6"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.4",
+    "@babel/plugin-transform-runtime": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "@babel/runtime": "^7.3.4",
+    "babel-loader": "^8.0.5",
+    "babel-polyfill": "^6.26.0",
+    "css-loader": "^2.1.1",
+    "node-sass": "^4.11.0",
+    "style-loader": "^0.23.1",
+    "vue-loader": "^15.7.0",
+    "vue-template-compiler": "^2.6.9",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0",
+    "webpack-dev-server": "^3.2.1"
+  }
+}
