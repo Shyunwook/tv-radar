@@ -17,7 +17,7 @@ let router = express.Router();
 //   REDIS.loadDataToRedis(period_list, cacheClient, res);
 // });
 
-cron.schedule('0 13 10 * * *',() => {
+cron.schedule('0 17 1 * * *',() => {
   console.log('wow');
   console.log(moment());
   let today = moment().add(0,'days').format("YYYY-MM-DD");
