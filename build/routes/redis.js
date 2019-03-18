@@ -24,9 +24,7 @@ var router = _express.default.Router();
 // });
 
 
-_nodeCron.default.schedule('0 17 1 * * *', function () {
-  console.log('wow');
-  console.log((0, _moment.default)());
+_nodeCron.default.schedule('0 0 21 * * *', function () {
   var today = (0, _moment.default)().add(0, 'days').format("YYYY-MM-DD");
   var period = [{
     dateFrom: today,
@@ -34,6 +32,8 @@ _nodeCron.default.schedule('0 17 1 * * *', function () {
   }];
 
   _redisFunc.default.loadDataToRedis(period, _database.default);
+
+  console.log('cron executed!!!');
 });
 
 module.exports = router;

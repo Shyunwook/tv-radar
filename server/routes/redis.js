@@ -17,12 +17,11 @@ let router = express.Router();
 //   REDIS.loadDataToRedis(period_list, cacheClient, res);
 // });
 
-cron.schedule('0 17 1 * * *',() => {
-  console.log('wow');
-  console.log(moment());
+cron.schedule('0 0 21 * * *',() => {
   let today = moment().add(0,'days').format("YYYY-MM-DD");
   let period = [{dateFrom : today, dateTo : today}];
   REDIS.loadDataToRedis(period, cacheClient);
+  console.log('cron executed!!!');
 })
 
 module.exports = router;
