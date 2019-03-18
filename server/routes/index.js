@@ -1,10 +1,9 @@
 import express from 'express';
 import moment from 'moment';
 import cacheClient from '../src/database.js';
+import FUNC from '../src/common.js';
 
 let router = express.Router();
-
-import FUNC from '../src/common.js';
 
 const wrap = asyncFn => {
 // FIXME: Promise와 catch를 이용하면 더 간결해질 것 같습니다.

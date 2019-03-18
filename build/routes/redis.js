@@ -8,13 +8,11 @@ var _redisFunc = _interopRequireDefault(require("../src/redis-func.js"));
 
 var _database = _interopRequireDefault(require("../src/database.js"));
 
+var _nodeCron = _interopRequireDefault(require("node-cron"));
+
 var router = _express.default.Router();
 /* GET users listing. */
-
-
-router.get('/', function (req, res, next) {
-  res.send('respond with a resource');
-}); // router.get('/flushall',(req, res) => {
+// router.get('/flushall',(req, res) => {
 //   res.send(cacheClient.flushall());
 // });
 //
@@ -22,5 +20,16 @@ router.get('/', function (req, res, next) {
 //   let period_list = REDIS.setPeriodList(90);
 //   REDIS.loadDataToRedis(period_list, cacheClient, res);
 // });
+
+
+_nodeCron.default.schedule('0 10 9 * * *', function () {
+  var today = moment().add(0, 'days').format("YYYY-MM-DD");
+  var period = [{
+    dateFrom: today,
+    dateTo: today
+  }];
+
+  _redisFunc.default.loadDataToRedis(period, _database.default);
+});
 
 module.exports = router;

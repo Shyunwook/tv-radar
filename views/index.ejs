@@ -37,7 +37,7 @@
               </v-flex>
             </v-layout>
             <v-layout>
-              <rank-component :other_name_gruop_data="other_name_gruop_data" :gs_name_gruop_data="gs_name_gruop_data" ></rank-component>
+              <rank-component :other_name_gruop_data="other_name_gruop_data" :gs_name_gruop_data="gs_name_gruop_data"></rank-component>
             </v-layout>
           </v-flex>
         </v-layout>
@@ -116,111 +116,41 @@
           </v-flex>
 
           <v-flex pl-3 pt-3 lg3 sm3>
-              <div class="gs_table_box" id="scroll-target" v-scroll:#scroll-target="onScroll">
-                <table class="table gs_table" >
-                  <thead>
-                    <div class="gs_title" data-placement="bottom" title="" data-toggle="tooltip" data-original-title="선택한 조건이 적용된 GS SHOP의 데이터">
-                      <h3 class="tb_title_zoey">GS SHOP</h3>
-                    </div>
-                  </thead>
-                  <tbody>
-                    <tr class="">
-                      <td>순위</td>
-                      <td>이미지</td>
-                      <td class="">사용분</td>
-                      <td class="">가중분</td>
-                    </tr>
-                    <tr v-if="gs_view_data.length<=0">
-                      <td colspan="4">
-                        No data available
-                      </td>
-                    </tr>
-                    <tr v-for="(data,index) in gs_view_data" :data-category=data.category :data-brand=data.brand :data-shop=data.shop>
-                      <td class=""><span class="replacement"></span></td>
-                      <td><img :src=data.img width="100%" height="auto" /></td>
-                      <td class="">{{data.real_min}}분</td>
-                      <td class="">{{data.weighted_min}}분</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-          </v-flex>
-
-        </v-layout>
-      </v-container>
-    </v-app>
-  </template>
-
-  <template id="otherRankTemplate">
-    <v-app id="inspire">
-      <v-container>
-        <!-- <v-data-table v-model="selected" :headers="headers" :items="filteredRankItem" :pagination.sync="pagination" select-all item-key="name" class="elevation-1"> -->
-        <v-select flat hide-details small clearable :items="columnValueList('category')" v-model="filters['category']" placeholder="카테고리 필터"></v-select>
-        <v-layout>
-          <v-flex lg4 pa-1>
-            <v-select flat hide-details small multiple clearable :items="columnValueList('shop')" v-model="filters['shop']" placeholder="경쟁사 필터"></v-select>
-          </v-flex>
-          <v-flex lg4 pa-1>
-            <v-select flat hide-details small clearable :items="columnValueList('category')" v-model="filters['category']" placeholder="카테고리 필터"></v-select>
-          </v-flex>
-        </v-layout>
-        <v-data-table :headers="headers" :items="filteredRankItem" :pagination.sync="pagination">
-          <template slot="headers" slot-scope="props">
-            <tr>
-              <th v-for="header in props.headers" :key="header.text" :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']" @click="changeSort(header.value)">
-                <v-icon small>arrow_upward</v-icon>
-                {{ header.text }}
-              </th>
-            </tr>
-          </template>
-
-          <template slot="items" slot-scope="props">
-            <tr :active="props.selected" @click="props.selected = !props.selected">
-              <td class="text-xs-right">{{(props.index+1)+(pagination.page-1)*pagination.rowsPerPage}}</td>
-              <td class="text-xs-right">{{ props.item.shop }}</td>
-              <td class="text-xs-right">
-                <img :src="props.item.img" width="100px" height="100px" />
-              </td>
-              <td class="text-xs-right">{{ props.item.brand }}</td>
-              <td class="text-xs-right">{{ props.item.name }}</td>
-              <td class="text-xs-right">{{ props.item.real_min }}분</td>
-              <td class="text-xs-right">{{ props.item.weighted_min }}분</td>
-              <td class="text-xs-right">{{ props.item.count }}회</td>
-            </tr>
-          </template>
-        </v-data-table>
-      </v-container>
-    </v-app>
-  </template>
-
-  <!-- <template id="gsRankTemplate">
-    <div>
-      <div class="gs_table_box">
-        <table class="table gs_table">
-          <thead>
-            <div class="gs_title" data-placement="bottom" title="" data-toggle="tooltip" data-original-title="선택한 조건이 적용된 GS SHOP의 데이터">
-              <h3 class="tb_title_zoey">GS SHOP</h3>
+            <div class="gs_table_box" id="scroll-target" v-scroll:#scroll-target="onScroll">
+              <table class="table gs_table">
+                <thead>
+                  <div class="gs_title" data-placement="bottom" title="" data-toggle="tooltip" data-original-title="선택한 조건이 적용된 GS SHOP의 데이터">
+                    <h3 class="tb_title_zoey">GS SHOP</h3>
+                  </div>
+                </thead>
+                <tbody>
+                  <tr class="">
+                    <td>순위</td>
+                    <td>이미지</td>
+                    <td class="">사용분</td>
+                    <td class="">가중분</td>
+                  </tr>
+                  <tr v-if="gs_view_data.length<=0">
+                    <td colspan="4">
+                      No data available
+                    </td>
+                  </tr>
+                  <tr v-for="(data,index) in gs_view_data" :data-category=data.category :data-brand=data.brand :data-shop=data.shop>
+                    <td class=""><span class="replacement"></span></td>
+                    <td><img :src=data.img width="100%" height="auto" /></td>
+                    <td class="">{{data.real_min}}분</td>
+                    <td class="">{{data.weighted_min}}분</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-          </thead>
-          <tbody>
-            <tr class="">
-              <td>순위</td>
-              <td>이미지</td>
-              <td class="">사용분</td>
-              <td class="">가중분</td>
-            </tr>
-            <tr v-for="(data,index) in gs_name_gruop_data" :data-category=data.category :data-brand=data.brand :data-shop=data.shop>
-              <td class=""><span class="replacement"></span></td>
-              <td><img :src=data.img width="100%" height="auto" /></td>
-              <td class="">{{data.real_min}}분</td>
-              <td class="">{{data.weighted_min}}분</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </template> -->
+
+          </v-flex>
+
+        </v-layout>
+      </v-container>
+    </v-app>
+  </template>
   <script src="js/bundle.js"></script>
 </body>
 
