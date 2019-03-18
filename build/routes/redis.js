@@ -22,7 +22,7 @@ var router = _express.default.Router();
 // });
 
 
-_nodeCron.default.schedule('0 10 9 * * *', function () {
+_nodeCron.default.schedule('0 30 9 * * *', function () {
   var today = moment().add(0, 'days').format("YYYY-MM-DD");
   var period = [{
     dateFrom: today,
