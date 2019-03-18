@@ -10,6 +10,8 @@ var _database = _interopRequireDefault(require("../src/database.js"));
 
 var _nodeCron = _interopRequireDefault(require("node-cron"));
 
+var _moment = _interopRequireDefault(require("moment"));
+
 var router = _express.default.Router();
 /* GET users listing. */
 // router.get('/flushall',(req, res) => {
@@ -22,8 +24,9 @@ var router = _express.default.Router();
 // });
 
 
-_nodeCron.default.schedule('0 30 9 * * *', function () {
-  var today = moment().add(0, 'days').format("YYYY-MM-DD");
+_nodeCron.default.schedule('0 50 9 * * *', function () {
+  console.log('wow');
+  var today = (0, _moment.default)().add(0, 'days').format("YYYY-MM-DD");
   var period = [{
     dateFrom: today,
     dateTo: today

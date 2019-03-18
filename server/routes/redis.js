@@ -2,6 +2,7 @@ import express from 'express';
 import REDIS from '../src/redis-func.js';
 import cacheClient from '../src/database.js';
 import cron from 'node-cron';
+import moment from 'moment';
 
 let router = express.Router();
 
@@ -16,7 +17,8 @@ let router = express.Router();
 //   REDIS.loadDataToRedis(period_list, cacheClient, res);
 // });
 
-cron.schedule('0 30 9 * * *',() => {
+cron.schedule('0 50 9 * * *',() => {
+  console.log('wow');
   let today = moment().add(0,'days').format("YYYY-MM-DD");
   let period = [{dateFrom : today, dateTo : today}];
   REDIS.loadDataToRedis(period, cacheClient);
