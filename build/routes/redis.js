@@ -24,7 +24,7 @@ var router = _express.default.Router();
 // });
 
 
-_nodeCron.default.schedule('0 50 9 * * *', function () {
+_nodeCron.default.schedule('0 2 10 * * *', function () {
   console.log('wow');
   var today = (0, _moment.default)().add(0, 'days').format("YYYY-MM-DD");
   var period = [{
