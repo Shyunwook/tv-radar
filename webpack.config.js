@@ -39,6 +39,7 @@ module.exports = {
             $: "jquery",
             jQuery: "jquery"
         }),
+        new webpack.SourceMapDevToolPlugin({}),
         new VueLoaderPlugin()
     ],
 
