@@ -9,6 +9,7 @@ module.exports = (() => {
   client.on('connect', () => {
     console.log(`redis connected on ${ip}...!`) ;
   })
+
   return client;
 
   // return redis.createClient(6379,'172.31.29.112');
