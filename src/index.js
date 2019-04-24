@@ -14,6 +14,7 @@ Vue.use(Vuetify);
 
 const INIT_COUNT = 10;
 const ADD_COUNT = 20;
+let down_data = [];
 
 $(document).ready(() => {
   $.fn.ploading.defaults = {
@@ -32,7 +33,88 @@ $(document).ready(() => {
       }
     }
   });
+
 })
+
+
+function convertToCSV(objArray) {
+    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+    var str = '';
+
+    for (var i = 0; i < array.length; i++) {
+        var line = '';
+        for (var index in array[i]) {
+            if (line != '') line += ','
+
+            line += array[i][index];
+        }
+
+        str += line + '\r\n';
+    }
+
+    return str;
+}
+
+function exportCSVFile(headers, items, fileTitle) {
+    if (headers) {
+        items.unshift(headers);
+    }
+
+    // Convert Object to JSON
+    var jsonObject = JSON.stringify(items);
+
+    var csv = convertToCSV(jsonObject);
+
+    var exportedFilenmae = fileTitle + '.csv' || 'export.csv';
+
+    var blob = new Blob(["\ufeff"+csv], { type: 'text/csv;charset=utf-8,\uFEFF' });
+    if (navigator.msSaveBlob) { // IE 10+
+        navigator.msSaveBlob(blob, exportedFilenmae);
+    } else {
+        var link = document.createElement("a");
+        if (link.download !== undefined) { // feature detection
+            // Browsers that support HTML5 download attribute
+            var url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", exportedFilenmae);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    }
+}
+
+function download(){
+  var headers = {
+      name: '방송명',
+      brand: "브랜드",
+      shop: "경쟁사",
+      real_min: "사용분",
+      weighted_min: "가중분",
+      category: "카테고리",
+      count: "방송횟수"
+  };
+  var itemsNotFormatted = down_data;
+  var itemsFormatted = [];
+
+  // format the data
+  itemsNotFormatted.forEach((item) => {
+      itemsFormatted.push({
+          name: item.name.replace(/,/g, ''), // remove commas to avoid errors,
+          brand: item.brand,
+          shop: item.shop,
+          real_min: item.real_min,
+          weighted_min: item.weighted_min,
+          category: item.category,
+          count: item.count
+      });
+  });
+
+  var fileTitle = 'orders'; // or 'my-unique-title'
+
+  exportCSVFile(headers, itemsFormatted, fileTitle); // call the exportCSVFile() function to process the JSON and trigger the download
+}
 
 function periodValidator(start, end, tag) {
   let flag = true;
@@ -319,6 +401,7 @@ let clist = new Vue({
     show_modal: false,
     history: [],
     page: 1,
+    download: false
 
   },
   components: {
@@ -345,9 +428,10 @@ let clist = new Vue({
             dateTo: period[1]
           },
           success: (data) => {
-            console.log(data.result);
+            // console.log(data.result);
             let other_data = data.other_grouped_weight_data;
             console.log(other_data);
+            down_data = other_data;
             let gs_data = data.gs_grouped_weight_data;
 
             this.gs_name_gruop_data = gs_data;
@@ -360,6 +444,8 @@ let clist = new Vue({
             $('body').ploading({
               action: 'hide'
             });
+
+            this.download = true;
           },
           error: (e) => {
             console.error(e);
@@ -367,6 +453,9 @@ let clist = new Vue({
           }
         })
       }
+    },
+    excelDownload: function(){
+      download();
     }
   }
 })

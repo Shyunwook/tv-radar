@@ -42,6 +42,7 @@
                   </v-flex>
                   <v-flex shink>
                     <v-btn class="btn_search btn-zoey" id="search" @click=getData()>조회</v-btn>
+                    <v-btn id="excel_download" class="btn_search btn-zoey" v-if="download" @click="excelDownload">엑셀 다운로드</v-btn>
                   </v-flex>
                 </v-layout>
               </v-flex>
