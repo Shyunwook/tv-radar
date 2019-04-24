@@ -6,8 +6,7 @@ var _redis = _interopRequireDefault(require("redis"));
 
 module.exports = function () {
   // let ip = '13.209.15.25';
-  // let ip = '172.31.29.112';
-  var ip = '127.0.0.1';
+  var ip = '172.31.29.112'; // let ip = '127.0.0.1';
 
   var client = _redis.default.createClient(6379, ip);
 
