@@ -2,12 +2,15 @@ import $ from 'jquery';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
 import moment from 'moment';
+import schedule from './schedule.js';
 import 'air-datepicker-en';
-import 'p-loading'
+import 'p-loading';
+import 'bootstrap';
 
+import 'bootstrap/dist/css/bootstrap.css';
 import 'vuetify/dist/vuetify.min.css';
 import 'air-datepicker-en/dist/css/datepicker.css';
-import 'p-loading/dist/css/p-loading.css'
+import 'p-loading/dist/css/p-loading.css';
 
 Vue.use(Vuetify);
 
@@ -17,11 +20,27 @@ const ADD_COUNT = 20;
 let down_data = [];
 
 $(document).ready(() => {
+  setHeaderBtn();
+
   $.fn.ploading.defaults = {
     useAddOns: ['plspinkit'],//we are calling the pl-spinkit by default
     spinner: 'rotatingPlane', //we are defining the rotatingPlane spinner as default,
     maskColor: 'rgba(1, 1, 1, 0.6)' //Change the mask color background to white as the spinners colors is black
   };
+
+  schedule();
+
+  $('.target_link').on('click',function(){
+    window.location.replace('/target');
+  });
+
+  $('.schedule_link').on('click',function(){
+    window.location.replace('/schedule');
+  })
+
+  $('.home_link').on('click',function(){
+    window.location.replace('../');
+  })
 
   $('.datepicker-here').datepicker({
     language: 'en',
@@ -35,6 +54,26 @@ $(document).ready(() => {
   });
 
 })
+
+function setHeaderBtn(){
+  let route = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
+  if(route=='target'){
+    $('.target_link').removeClass('btn-outline-dark');
+    $('.target_link').addClass('btn-dark');
+    $('.schedule_link').removeClass('btn-dark');
+    $('.schedule_link').addClass('btn-outline-dark');
+  }else if(route=='schedule'){
+    $('.schedule_link').removeClass('btn-outline-dark');
+    $('.schedule_link').addClass('btn-dark');
+    $('.target_link').removeClass('btn-dark');
+    $('.target_link').addClass('btn-outline-dark');
+  }else{
+    $('.target_link').removeClass('btn-dark');
+    $('.target_link').addClass('btn-outline-dark');
+    $('.schedule_link').removeClass('btn-dark');
+    $('.schedule_link').addClass('btn-outline-dark');
+  }
+}
 
 
 function convertToCSV(objArray) {

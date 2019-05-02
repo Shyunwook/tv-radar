@@ -60,11 +60,21 @@ var wrap = function wrap(asyncFn) {
 
 
 router.get('/', function (req, res, next) {
-  res.render('index.ejs', {
+  res.render('target.ejs', {
+    result: "",
+    other_grouped_weight_data: "",
+    gs_grouped_weight_data: ""
+  }); // res.render('index.ejs');
+});
+router.get('/target', function (req, res, next) {
+  res.render('target.ejs', {
     result: "",
     other_grouped_weight_data: "",
     gs_grouped_weight_data: ""
   });
+});
+router.get('/schedule', function (req, res, next) {
+  res.render('schedule.ejs');
 });
 router.post('/getScheduleData', wrap(
 /*#__PURE__*/

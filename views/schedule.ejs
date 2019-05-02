@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-91675162-15"></script>
+  <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-91675162-15');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/schedule.css">
+</head>
+
+<body>
+  <div class="container">
+    <% include ./header.ejs %>
+    <div class="excel_table"></div>
+    <div class="row">
+      <button class="schedule_excel btn btn-dark col-auto">엑셀 다운로드</button>
+      <div class="col-auto row ml-auto">
+        <div class="schedule_select">
+          <select class="schedule_category custom-select">
+            <option default disabled>카테고리 선택</option>
+            <option value="all">전체 카테고리</option>
+            <option value="생활·주방">생활·주방</option>
+            <option value="가전·디지털">가전·디지털</option>
+            <option value="화장품·미용">화장품·미용</option>
+            <option value="패션·잡화">패션·잡화</option>
+            <option value="유아·아동">유아·아동</option>
+            <option value="여행·레저">여행·레저</option>
+            <option value="식품·건강">식품·건강</option>
+            <option value="보험">보험</option>
+          </select>
+        </div>
+        <div class="schedule_date">
+          <input placeholder="yyyy-mm-dd ~ yyyy-mm-dd" data-range="true" data-multiple-dates-separator=" ~ "
+          data-language="en" class="schedule_datepicker date_picker form-control" data-date-format="yyyy-mm-dd">
+        </div>
+        <button class="get_schedule btn btn-outline-primary">조회</button>
+      </div>
+    </div>
+
+    <div class="cd-schedule loading">
+      <div class="timeline">
+        <ul>
+          <li class="pa-00"><span>00:00</span></li>
+          <li class="pa-01"><span>01:00</span></li>
+          <li class="pa-02"><span>02:00</span></li>
+          <li class="pa-03"><span>03:00</span></li>
+          <li class="pa-04"><span>04:00</span></li>
+          <li class="pa-05"><span>05:00</span></li>
+          <li class="pa-06"><span>06:00</span></li>
+          <li class="pa-07"><span>07:00</span></li>
+          <li class="pa-08"><span>08:00</span></li>
+          <li class="pa-09"><span>09:00</span></li>
+          <li class="pa-10"><span>10:00</span></li>
+          <li class="pa-11"><span>11:00</span></li>
+          <li class="pa-12"><span>12:00</span></li>
+          <li class="pa-13"><span>13:00</span></li>
+          <li class="pa-14"><span>14:00</span></li>
+          <li class="pa-15"><span>15:00</span></li>
+          <li class="pa-16"><span>16:00</span></li>
+          <li class="pa-17"><span>17:00</span></li>
+          <li class="pa-18"><span>18:00</span></li>
+          <li class="pa-19"><span>19:00</span></li>
+          <li class="pa-20"><span>20:00</span></li>
+          <li class="pa-21"><span>21:00</span></li>
+          <li class="pa-22"><span>22:00</span></li>
+          <li class="pa-23"><span>23:00</span></li>
+        </ul>
+      </div>
+
+      <div class="events">
+        <ul class="event_day"></ul>
+      </div>
+
+      <div class="event-modal">
+        <header class="header">
+          <div class="content">
+            <span class="event-date"></span>
+            <h3 class="event-name"></h3>
+          </div>
+
+          <div class="header-bg"></div>
+        </header>
+
+        <div class="body">
+          <div class="event-info"></div>
+          <div class="body-bg"></div>
+        </div>
+
+        <a href="#0" class="close"></a>
+      </div>
+
+      <div class="cover-layer"></div>
+    </div>
+  </div>
+
+  <script src="js/modernizr.js"></script>
+  <script src="js/bundle.js"></script>
+</body>
+
+</html>
