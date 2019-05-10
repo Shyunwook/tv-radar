@@ -759,8 +759,12 @@ export default function schedule(){
 		$('.schedule_select').hide();
 		$('.cd-schedule').hide();
 		$('.events-group').remove();
-		let period = ($('.selected_period').data('date')).split(' ~ ');
-		getData(period[0], period[1]);
+
+		let period = setWeekDays(moment($('.schedule_datepicker').val()));
+		$('.selected_period').text(`${moment(period.start).format("YYYY년 MM월 DD일")} ~ ${moment(period.end).format("YYYY년 MM월 DD일")}`);
+    $('.selected_period').data('date',`${moment(period.start).format('YYYY-MM-DD')} ~ ${moment(period.end).format('YYYY-MM-DD')}`);
+
+		getData(period.start, period.end);
 	})
 
 	$('.pre_week').on('click', function(){
