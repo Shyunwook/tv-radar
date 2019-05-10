@@ -269,7 +269,7 @@ function getBrandName(item_name,dictionary){
       return brand_name_list[i];
     }
   }
-  return "😥😥😥😥";
+  return "😥😥😥";
 }
 
 function readBrandDictionary(){

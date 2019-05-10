@@ -8,7 +8,9 @@
     "build": "babel server --out-dir build --copy-files && ./node_modules/.bin/webpack"
   },
   "dependencies": {
+    "@atomaras/bootstrap-multiselect": "^1.0.0",
     "@babel/runtime": "^7.3.4",
+    "@eliasnystrom/bootstrap-multiselect": "^1.0.0",
     "air-datepicker-en": "^2.2.5",
     "body-parser": "^1.18.3",
     "bootstrap": "^4.3.1",

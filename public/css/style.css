@@ -1,8 +1,12 @@
+html body{
+  font-family: NotoSansKR !important;
+}
+
 .date_picker{
   background: white;
-    border: 1px solid #bbb;
-    border-radius: 5px;
-    padding: 5px;
+  border: 1px solid #bbb;
+  border-radius: 5px;
+  padding: 5px;
 }
 
 .modal-mask {
@@ -49,13 +53,13 @@
 }
 
 /*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
+* The following styles are auto-applied to elements with
+* transition="modal" when their visibility is toggled
+* by Vue.js.
+*
+* You can easily play with the modal transition by editing
+* these styles.
+*/
 
 .modal-enter {
   opacity: 0;
@@ -76,18 +80,19 @@
 }
 
 body {
-    font-family: "Poppins", sans-serif;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 1.625;
-    color: #666;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.625;
+  color: #666;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 html body{
   font-size: 14px;
   height: 100vh;
+  font-family: NotoSansKR !important;
 }
 
 .gs_title{
@@ -99,8 +104,13 @@ html body .shop_category{
   margin-top: 15px;
 }
 
-.content{
-  padding-top: 25px;
+.index_content{
+  padding-top: 50px;
+  padding-left: 50px;
+  padding-right: 50px;
+  width: 1024px;
+  margin: 0 auto;
+  display: flex;
 }
 
 .schedule_name {
@@ -143,10 +153,95 @@ td{
   text-overflow: ellipsis; */
 }
 
+.target_content .datepicker-here{
+  width: 260px;
+  height: 45px;
+  border: solid 1px #dcdde1;
+  border-radius: 0px;
+  padding: 14px 16px 17px 17px;
+  float: left;
+}
 
-.datepicker-here{
-  width: 210px;
-  margin-right: 15px;
+.target_content .container .layout.wrap .btn_search{
+  width: 73px;
+  height: 45px;
+  background-color: #00a7b8;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #ffffff;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+  float: left;
+}
+
+.target_content .theme--light.v-text-field>.v-input__control>.v-input__slot:before{
+  border: none;
+}
+
+.target_content .v-input.target_shop_select, .target_content .v-input.target_cate_select{
+  float: left;
+  flex: none;
+  margin: 0;
+  width: 230px;
+  height: 45px;
+  border: solid 1px #dcdde1;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  padding-top: 0;
+}
+
+.target_content .v-input.target_shop_select{
+  margin-right: 12px;
+}
+
+.target_content .v-input.target_shop_select .v-input__slot,
+.target_content .v-input.target_cate_select .v-input__slot{
+  padding: 14px 13px 17px 19px;
+}
+
+.target_content .v-input.target_shop_select .v-input__slot .v-input__append-inner,
+.target_content .v-input.target_cate_select .v-input__slot .v-input__append-inner{
+  padding: 0;
+  margin: 0;
+}
+
+.target_content .v-input.target_shop_select div,
+.target_content .v-input.target_cate_select div{
+  flex-wrap: nowrap;
+  height: 45px;
+}
+
+.target_title{
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: 0.7px;
+  color: #4a4a4a;
+  width: 100%;
+  margin-bottom: 26px;
+}
+
+.filter_name{
+  font-size: 12px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  letter-spacing: 0.8px;
+  color: #212121;
+  margin: 0;
+  height: 18px;
+  line-height: 18px;
 }
 
 .category_filter{
@@ -158,11 +253,29 @@ td{
 }
 
 .help{
-  border: 1px solid #00a7b5;
-  color: #00a7b5;
-  padding: 6px;
-  border-radius: 4px;
-  margin-left: 10px;
+  width: 93px;
+  height: 45px;
+  line-height: 45px !important;
+  border-radius: 9px;
+  border: solid 1px #4a4a4a;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-align: center;
+  color: #4a4a4a;
+  text-decoration: none;
+
+  position: absolute;
+  right: 37px;
+  top: 50%;
+  transform: translate(0,-40%);
+}
+
+.right_content{
+  justify-content: flex-end;
 }
 
 .title{
@@ -176,8 +289,8 @@ td{
 
 /* ----- Table ----- */
 .table {
-    margin: 0;
-    table-layout: fixed;
+  margin: 0;
+  table-layout: fixed;
 }
 
 .wi-11{
@@ -216,38 +329,610 @@ table.v-table tbody td:first-child, table.v-table tbody td:not(:first-child), ta
 }
 
 .top_menu{
-  padding: 15px;
-
+  max-width: 1024px;
+  margin: 0 auto;
 }
 
-.menu_btn_group button{
-  height: 100%;
+
+.schedule_date .schedule_datepicker{
+  border-radius: 0;
+  float: left;
+  width: 260px;
+  height: 45px;
+  border: solid 1px #dcdde1;
+  padding: 15px 21px 15px 21px;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #444444;
 }
 
-.target_area, .schedule_area{
-  /* height: 50vh; */
+.schedule_date .schedule_datepicker::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #b5b8bb;
 }
 
-.target_area .target_img, .schedule_area .schedule_img{
+.schedule_date .schedule_datepicker:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #b5b8bb;
+}
+
+.schedule_date .schedule_datepicker::-ms-input-placeholder { /* Microsoft Edge */
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #b5b8bb;
+}
+
+.target_content .datepicker-here::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #b5b8bb;
+}
+
+.target_content .datepicker-here:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #b5b8bb;
+}
+
+.target_content .datepicker-here::-ms-input-placeholder { /* Microsoft Edge */
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #b5b8bb;
+}
+
+.target_shop_select input::placeholder, .target_cate_select input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  font-size: 14px !important;
+  font-weight: bold !important;
+  font-style: normal !important;
+  font-stretch: normal !important;
+  line-height: 1 !important;
+  letter-spacing: normal !important;
+  color: #b5b8bb !important;
+}
+
+.target_shop_select input:-ms-input-placeholder, .target_cate_select input::placeholder { /* Internet Explorer 10-11 */
+  font-size: 14px !important;
+  font-weight: bold !important;
+  font-style: normal !important;
+  font-stretch: normal !important;
+  line-height: 1 !important;
+  letter-spacing: normal !important;
+  color: #b5b8bb !important;
+}
+
+.target_shop_select input::-ms-input-placeholder, .target_cate_select input::placeholder { /* Microsoft Edge */
+  font-size: 14px !important;
+  font-weight: bold !important;
+  font-style: normal !important;
+  font-stretch: normal !important;
+  line-height: 1 !important;
+  letter-spacing: normal !important;
+  color: #b5b8bb !important;
+}
+
+.date_filter p, .cate_shop_filter p{
+  height: 18px;
+  font-size: 12px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 18px;
+  letter-spacing: 0.8px;
+  color: #212121;
+  margin-bottom: 10px;
+}
+
+.circle_number{
+  display: block;
   text-align: center;
+  float: left;
+  margin-right: 12px;
+  width: 16px;
+  height: 16px;
+  color: #ffffff;
+  background: #00a7b8;
+  border-radius: 50%;
+  line-height: 18px;
+  font-size: 11px;
 }
 
-.schedule_datepicker{
-  min-width: 207px;
+.date_filter .schedule_date .get_schedule{
+  cursor: pointer;
+  width: 73px;
+  height: 45px;
+  background-color: #00a7b8;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #ffffff;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+  float: left;
+  border: none;
 }
 
-.schedule_date{
-  margin-left: 10px;
-}
-
-.get_schedule{
-  margin-left: 10px;
-}
-
-.container .schedule_excel, .container .schedule_select{
+.container .schedule_excel, .container .schedule_category, .container .schedule_shop{
   display: none;
 }
 
+.schedule_category .category_select{
+  border-radius: 0;
+  padding: 14px 15px 15px 19px;
+  width: 230px;
+  height: 45px;
+  border: solid 1px #dcdde1;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #444444;
+}
+
+.schedule_category{
+  float: left;
+  margin-right: 12px;
+  position: relative;
+}
+
+.schedule_shop{
+  float: left;
+}
+
+.right_align{
+  float: right;
+}
+
+.multiselect.dropdown-toggle.btn.btn-default{
+  border-radius: 0;
+  padding: 14px 15px 15px 19px;
+  text-align: left;
+  width: 230px;
+  height: 45px;
+  border: solid 1px #dcdde1;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #444444;
+}
+
+.header_content{
+  height: auto;
+  padding: 33px 10px 24px 37px;
+  border-bottom: solid 1px #d1d1d1;
+  position: relative;
+}
+
 .home_link{
+  width: 119px;
+  height: 17px;
+  object-fit: contain;
   cursor: pointer;
+  float: left;
+  margin-right: 52.5px;
+}
+
+.target_link{
+  outline: none !important;
+}
+
+.schedule_link{
+  margin-left: 40px;
+  outline: none !important;
+}
+
+.header_menu{
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: 1.2px;
+  text-align: center;
+  color: #444444;
+}
+
+.header_menu:hover{
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: 1.2px;
+  text-align: center;
+  color: #00a7b8;
+}
+
+.header_menu_hover{
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: 1.2px;
+  text-align: center;
+  color: #00a7b8;
+}
+
+.target_area, .schedule_area{
+  width: 50%;
+  float: left;
+  padding-top: 45px;
+  padding-bottom: 100px;
+}
+
+.target_area{
+  border-right: solid 1px #d1d1d1;
+  padding-right: 59px;
+}
+
+.schedule_area{
+  padding-left: 59px;
+}
+
+.number_box{
+  float: left;
+  margin-right: 15px;
+  text-align: center;
+}
+
+.service_info{
+  float: left;
+  margin-left: -9px;
+}
+
+.index_content .title_text{
+  font-size: 12px;
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: 2.4px;
+  color: #9fa3a7;
+}
+
+.index_content .big_info{
+  font-size: 24px;
+  font-weight: 900;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.33;
+  letter-spacing: normal;
+  color: #212121;
+}
+
+.big_info.first{
+  margin-bottom: 0;
+}
+
+.index_content .small_info{
+  font-size: 14px;
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.86;
+  letter-spacing: normal;
+  color: #9fa3a7;
+  margin-bottom: 0;
+}
+
+.schedule_content{
+  width: 940px;
+  margin: 0 auto;
+}
+
+.schedule_content .date_filter, .schedule_content .cate_shop_filter{
+  padding: 0;
+}
+
+.target_content .date_filter, .target_content .cate_shop_filter{
+  padding: 0;
+}
+
+.schedule_content .filter_area{
+  padding-bottom: 33px;
+  margin: 57px 0px 28px 0px;
+  border-bottom: solid 1px #dcdde1;
+}
+
+.selected_period{
+  width: 260px;
+  border-bottom: solid 1px #4a4a4a;
+  padding: 15px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #444444;
+  float: left;
+}
+
+.target_content .selected_period{
+  height: 45px;
+}
+
+.pre_week, .next_week{
+  width: 87px;
+  height: 43px;
+  float: left;
+}
+
+.next_week span{
+  margin-left: 10px;
+}
+
+.pre_week span{
+  margin-right: 10px;
+}
+
+.pre_week{
+  border-right: 1px solid #dcdde1;
+}
+
+.week_btn_box{
+  float: left;
+  margin-left: 13px;
+  border: solid 1px #dcdde1;
+  border-radius: 8px;
+}
+
+.week_btn_box span{
+  vertical-align: text-bottom;
+}
+
+.schedule_excel{
+  width: 130px;
+  height: 45px;
+  border-radius: 9px;
+  border: solid 1px #00a7b8;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-align: center;
+  color: #00a7b8;
+  float: right;
+}
+
+.application--wrap .layout.func_area .tareget_excel{
+  width: 130px;
+  height: 45px;
+  border-radius: 9px;
+  border: solid 1px #00a7b8;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-align: center;
+  color: #00a7b8;
+  background: white !important;
+  margin-left: 18.2px;
+}
+
+.func_area{
+  height: 45px;
+}
+
+.target_content .func_area{
+  width: 940px;
+  margin: 0 auto;
+}
+
+.target_content .theme--light.application{
+  background: white;
+}
+
+.target_content .filter_area{
+  width: 940px;
+  margin: 0 auto;
+  margin-top: 7px;
+  padding-bottom: 33px;
+  border-bottom: solid 1px #dcdde1;
+  margin-bottom: 28px;
+}
+
+.target_table{
+  width: 940px;
+  margin: 0 auto;
+}
+
+.v-datatable thead th.column.sortable{
+  padding: 0 5px !important;
+}
+
+.ec_name{
+  width: 200px !important;
+}
+
+
+table.v-table tbody td:first-child,
+table.v-table tbody td:not(:first-child),
+table.v-table tbody th:first-child,
+table.v-table tbody th:not(:first-child),
+table.v-table thead td:first-child,
+table.v-table thead td:not(:first-child),
+table.v-table thead th:first-child,
+table.v-table thead th:not(:first-child){
+  padding: 0 5px !important;
+}
+
+.target_content .v-select__selection--comma{
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: 0.7px;
+  text-align: center;
+  color: #4a4a4a;
+  margin: 0 4px 0 0;
+}
+
+.target_shop_select .v-select__slot .shop_number_text{
+  width: 100%;
+  margin: 0;
+  height: 100%;
+  line-height: 45px;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  letter-spacing: 0.7px;
+  color: #4a4a4a;
+}
+
+.theme--light.v-icon{
+  color: black !important;
+}
+
+.multiselect-selected-text{
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #444444;
+}
+
+.schedule_shop .dropdown-toggle::after{
+  display: none;
+}
+
+.schedule_shop .theme--light.v-icon{
+  height: 45px;
+  position: absolute;
+  top: 0;
+  right: 15px;
+}
+
+.schedule_category .theme--light.v-icon{
+  height: 45px;
+  position: absolute;
+  top: 0;
+  right: 15px;
+}
+
+.schedule_content .custom-select{
+  background: none
+}
+
+.schedule_shop .multiselect-container>li>a>label{
+  color: #444444;
+  margin: 0;
+  height: 100%;
+  cursor: pointer;
+  font-weight: 400;
+  padding: 3px 0 3px 10px;
+}
+
+.schedule_shop .dropdown-item.active, .dropdown-item:active{
+  background-color: #00a7b7;
+}
+
+.schedule_shop .multiselect-container>.dropdown-item.active>a>label{
+  color: white;
+}
+
+.event-name img{
+  margin-right: 5px;
+}
+
+.target_area .arrow_link{
+  height: 40px;
+  width: 40px;
+  display: block;
+  text-align: center;
+  border-radius: 50%;
+  margin-top: 20px;
+  margin-bottom: 37px;
+}
+
+.schedule_area .arrow_link{
+  height: 40px;
+  width: 40px;
+  display: block;
+  text-align: center;
+  border-radius: 50%;
+  margin-top: 17px;
+  margin-bottom: 32px;
+}
+
+.target_area .arrow_link .material-icons, .schedule_area .arrow_link .material-icons{
+  color: black;
+  height: 40px;
+  width: 40px;
+  text-align: center;
+  line-height: 35px;
+  border: solid 3px #00a7b5;
+  border-radius: 50%;
+}
+
+.footer{
+  padding: 3rem 1.5rem 4rem;
+  width: 1024px;
+  margin: 0 auto;
+  font-size: 12px;
+  /* position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%,0); */
+}
+
+.right_align .custom-select:disabled{
+  background: white;
+  color: #8c8c8c;
+}
+
+.disabled .multiselect-selected-text{
+  color: #8c8c8c;
+}
+
+.schedule_shop .btn.disabled,.schedule_shop .btn:disabled{
+  opacity: 1;
 }

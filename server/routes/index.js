@@ -18,8 +18,7 @@ const wrap = asyncFn => {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('target.ejs',{result : "", other_grouped_weight_data : "", gs_grouped_weight_data : ""});
-  // res.render('index.ejs');
+  res.render('index.ejs');
 });
 
 router.get('/target', function(req, res, next) {

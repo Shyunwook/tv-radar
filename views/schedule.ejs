@@ -12,40 +12,93 @@
   gtag('config', 'UA-91675162-15');
   </script>
 
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TGT3S93');</script>
+<!-- End Google Tag Manager -->
+
   <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/schedule.css">
+  <link rel="stylesheet" href="css/bootstrap-multiselect.css" />
 </head>
 
 <body>
-  <div class="container">
-    <% include ./header.ejs %>
-    <div class="excel_table"></div>
-    <div class="row">
-      <button class="schedule_excel btn btn-dark col-auto">엑셀 다운로드</button>
-      <div class="col-auto row ml-auto">
-        <div class="schedule_select">
-          <select class="schedule_category custom-select">
-            <option default disabled>카테고리 선택</option>
-            <option value="all">전체 카테고리</option>
-            <option value="생활·주방">생활·주방</option>
-            <option value="가전·디지털">가전·디지털</option>
-            <option value="화장품·미용">화장품·미용</option>
-            <option value="패션·잡화">패션·잡화</option>
-            <option value="유아·아동">유아·아동</option>
-            <option value="여행·레저">여행·레저</option>
-            <option value="식품·건강">식품·건강</option>
-            <option value="보험">보험</option>
-          </select>
-        </div>
+  <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TGT3S93"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+  <% include ./header.ejs %>
+  <div class="schedule_content">
+    <div class="filter_area row">
+      <div class="col-md-5 date_filter">
+        <div class="circle_number">1</div><p>조회 기준 방송일 선택</p>
         <div class="schedule_date">
-          <input placeholder="yyyy-mm-dd ~ yyyy-mm-dd" data-range="true" data-multiple-dates-separator=" ~ "
+          <input placeholder="기준 방송일 선택" data-range="false" data-multiple-dates-separator=" ~ "
           data-language="en" class="schedule_datepicker date_picker form-control" data-date-format="yyyy-mm-dd">
+          <button class="get_schedule btn btn-outline-primary">조회</button>
         </div>
-        <button class="get_schedule btn btn-outline-primary">조회</button>
       </div>
+      <div class="col-md-7 cate_shop_filter">
+        <div class="right_align">
+          <div class="circle_number">2</div><p>카테고리 & 경쟁사 선택</p>
+          <div class="schedule_category">
+            <select class="category_select custom-select" disabled>
+              <option default disabled>카테고리 선택</option>
+              <option value="all">전체 카테고리</option>
+              <option value="생활·주방">생활·주방</option>
+              <option value="가전·디지털">가전·디지털</option>
+              <option value="화장품·미용">화장품·미용</option>
+              <option value="패션·잡화">패션·잡화</option>
+              <option value="유아·아동">유아·아동</option>
+              <option value="여행·레저">여행·레저</option>
+              <option value="식품·건강">식품·건강</option>
+              <option value="보험">보험</option>
+            </select>
+            <i aria-hidden="true" class="v-icon material-icons theme--light">keyboard_arrow_down</i>
+          </div>
+          <div class="schedule_shop">
+            <select class="shop_select" multiple="multiple" disabled>
+              <option value="gsshop">GSSHOP</option>
+              <option value="gsmyshop">GSMYSHOP</option>
+              <option value="cjmall">CJ오쇼핑</option>
+              <option value="lottemall">롯데홈쇼핑</option>
+              <option value="hnsmall">홈&쇼핑</option>
+              <option value="hmall">현대홈쇼핑</option>
+              <option value="nsmall">NS홈쇼핑</option>
+              <!-- <option value="cjmall" selected="selected">CJ오쇼핑</option>
+              <option value="lottemall" selected="selected">롯데홈쇼핑</option>
+              <option value="hnsmall" selected="selected">홈&쇼핑</option>
+              <option value="hmall" selected="selected">현대홈쇼핑</option>
+              <option value="nsmall" selected="selected">NS홈쇼핑</option> -->
+              <option value="immall">공영쇼핑</option>
+              <option value="ssgshop">신세계쇼핑</option>
+              <option value="hmallplus">현대홈쇼핑+</option>
+              <option value="kshop">K shopping</option>
+              <option value="cjmallplus">CJ오쇼핑+</option>
+              <option value="lotteonetv">LotteOneTV</option>
+              <option value="shopnt">쇼핑엔티</option>
+              <option value="wshop">더블유쇼핑</option>
+              <option value="bshop">SK스토어</option>
+              <option value="nsmallplus">NSSHOP+</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="func_area">
+      <p class="selected_period" data-date="">날짜를 선택해 주세요</p>
+      <div class="week_btn_box">
+        <button class="pre_week"><i aria-hidden="true" class="v-icon material-icons theme--light">keyboard_arrow_left</i><span>지난주</span></button>
+        <button class="next_week"><span>다음주</span><i aria-hidden="true" class="v-icon material-icons theme--light">keyboard_arrow_right</i></button>
+      </div>
+      <button class="schedule_excel">엑셀 다운로드</button>
+      <div class="excel_table"></div>
     </div>
 
     <div class="cd-schedule loading">
@@ -103,7 +156,7 @@
       <div class="cover-layer"></div>
     </div>
   </div>
-
+  <% include ./footer.ejs %>
   <script src="js/modernizr.js"></script>
   <script src="js/bundle.js"></script>
 </body>

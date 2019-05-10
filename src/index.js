@@ -2,7 +2,7 @@ import $ from 'jquery';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
 import moment from 'moment';
-import schedule from './schedule.js';
+import schedule, {setWeekDays} from './schedule.js';
 import 'air-datepicker-en';
 import 'p-loading';
 import 'bootstrap';
@@ -14,9 +14,9 @@ import 'p-loading/dist/css/p-loading.css';
 
 Vue.use(Vuetify);
 
-
 const INIT_COUNT = 10;
 const ADD_COUNT = 20;
+const SCHEDULE_ROUTE = 'schedule';
 let down_data = [];
 
 $(document).ready(() => {
@@ -29,6 +29,16 @@ $(document).ready(() => {
   };
 
   schedule();
+
+  $('.multiselect.dropdown-toggle.btn.btn-default').append(`<i aria-hidden="true" class="v-icon material-icons theme--light">keyboard_arrow_down</i>`);
+
+  if(window.location.href.substr(window.location.href.lastIndexOf('/') + 1) === SCHEDULE_ROUTE){
+    let period = setWeekDays(moment());
+    $('.schedule_datepicker').val(moment().format('YYYY-MM-DD'));
+    $('.selected_period').text(`${moment(period.start).format("YYYY년 MM월 DD일")} ~ ${moment(period.end).format("YYYY년 MM월 DD일")}`);
+    $('.selected_period').data('date',`${moment(period.start).format('YYYY-MM-DD')} ~ ${moment(period.end).format('YYYY-MM-DD')}`);
+    // $('.get_schedule').trigger('click');
+  }
 
   $('.target_link').on('click',function(){
     window.location.replace('/target');
@@ -58,20 +68,20 @@ $(document).ready(() => {
 function setHeaderBtn(){
   let route = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
   if(route=='target'){
-    $('.target_link').removeClass('btn-outline-dark');
-    $('.target_link').addClass('btn-dark');
-    $('.schedule_link').removeClass('btn-dark');
-    $('.schedule_link').addClass('btn-outline-dark');
+    $('.target_link').removeClass('header_menu');
+    $('.target_link').addClass('header_menu_hover');
+    $('.schedule_link').removeClass('header_menu_hover');
+    $('.schedule_link').addClass('header_menu');
   }else if(route=='schedule'){
-    $('.schedule_link').removeClass('btn-outline-dark');
-    $('.schedule_link').addClass('btn-dark');
-    $('.target_link').removeClass('btn-dark');
-    $('.target_link').addClass('btn-outline-dark');
+    $('.schedule_link').removeClass('header_menu');
+    $('.schedule_link').addClass('header_menu_hover');
+    $('.target_link').removeClass('header_menu_hover');
+    $('.target_link').addClass('header_menu');
   }else{
-    $('.target_link').removeClass('btn-dark');
-    $('.target_link').addClass('btn-outline-dark');
-    $('.schedule_link').removeClass('btn-dark');
-    $('.schedule_link').addClass('btn-outline-dark');
+    $('.target_link').removeClass('header_menu_hover');
+    $('.target_link').addClass('header_menu');
+    $('.schedule_link').removeClass('header_menu_hover');
+    $('.schedule_link').addClass('header_menu');
   }
 }
 
@@ -197,8 +207,11 @@ function bottomVisible(position){
 
 let allRank = Vue.component('rank-component', {
   template: "#rankTemplate",
-  props: ['other_name_gruop_data', 'gs_name_gruop_data'],
+  // props: ['other_name_gruop_data', 'gs_name_gruop_data'],
   data: () => ({
+    other_name_gruop_data: [],
+    gs_name_gruop_data: [],
+    download: false,
     gs_view_data : [],
     filtered_gs_data : [],
     offsetTop : 0,
@@ -210,7 +223,7 @@ let allRank = Vue.component('rank-component', {
     headers: [{
         text: '순위',
         value: '',
-        width: "10"
+        width: "1%"
       },
       {
         text: '경쟁사',
@@ -259,7 +272,7 @@ let allRank = Vue.component('rank-component', {
   }),
   watch : {
     gs_name_gruop_data : function(val) {
-      this.filtered_gs_data = JSON.parse(JSON.stringify(val));
+      this.filtered_gs_data = JSON.parse(JSON.stringify(this.gs_name_gruop_data));
 
       this.gs_view_data = this.filtered_gs_data.splice(0,INIT_COUNT);
     },
@@ -285,6 +298,79 @@ let allRank = Vue.component('rank-component', {
     }
   },
   methods: {
+    selectText: function(){
+      this.$nextTick(function(){
+        console.log(this.filters.shop.length);
+        let num_p = $('.target_shop_select .v-select__selections .shop_number_text');
+        if(this.filters.shop.length >= 3){
+          $('.target_content .target_shop_select .v-select__selection--comma').hide();
+          if($(num_p).length === 0){
+            let ele = `<p class="shop_number_text">${this.filters.shop.length}개 선택됨</p>`
+            $('.target_shop_select .v-select__selections').append(ele);
+          }else{
+            $(num_p).text(`${this.filters.shop.length}개 선택됨`);
+            $(num_p).show();
+          }
+        }else{
+          $('.target_content .target_shop_select .v-select__selection--comma').show();
+          if($(num_p).length > 0){
+            $(num_p).hide();
+          }
+        }
+      })
+    },
+    getData: function() {
+      $('body').ploading({
+        action: 'show'
+      });
+
+      let period = ($('.datepicker-here').val()).split(' ~ ');
+      let flag = periodValidator(period[0], period[1], "click");
+
+      if (flag == true) {
+        $.ajax({
+          url: "/getScheduleData",
+          type: "POST",
+          dataType: "json",
+          data: {
+            dateFrom: period[0],
+            dateTo: period[1]
+          },
+          success: (data) => {
+            let date = $('.datepicker-here').val();
+            console.log(date);
+            let start = date.split(' ~ ')[0];
+            let end = date.split(' ~ ')[1];
+            start = moment(start).format("YYYY년 MM월 DD일");
+            end = moment(end).format("YYYY년 MM월 DD일");
+            $('.selected_period').text(`${start} ~ ${end}`);
+            console.log(start,end);
+            $('.datepicker-here').val('');
+
+            let other_data = data.other_grouped_weight_data;
+            let gs_data = data.gs_grouped_weight_data;
+
+            down_data = other_data;
+            this.gs_name_gruop_data = gs_data;
+            sortByWeightedMin(this.gs_name_gruop_data);
+
+            this.other_name_gruop_data = other_data;
+
+            $('.shop_category').css('display', 'flex');
+
+            $('body').ploading({
+              action: 'hide'
+            });
+
+            this.download = true;
+          },
+          error: (e) => {
+            console.error(e);
+            // $.hideLoading();
+          }
+        })
+      }
+    },
     gsDataHandler(option){
       if(option === "select"){
         $('.gs_table_box').scrollTop(0);
@@ -331,170 +417,22 @@ let allRank = Vue.component('rank-component', {
       if(bottomVisible(this.offsetTop)){
         this.gsDataHandler('scroll');
       }
-    }
-  },
-})
-
-let otherRank = Vue.component('other-rank-component', {
-  template: "#otherRankTemplate",
-  props: ['other_name_gruop_data'],
-  data: () => ({
-    pagination: {
-      sortBy: 'weighted_min',
-      descending: true
-    },
-    selected: [],
-    headers: [{
-        text: '순위',
-        value: '',
-        width: "300px"
-      },
-      {
-        text: '경쟁사',
-        value: 'shop',
-        width: "1%"
-      },
-      {
-        text: '이미지',
-        value: 'img',
-        width: "1%"
-      },
-      {
-        text: '브랜드',
-        value: 'brand',
-        width: "1%"
-      },
-      {
-        text: '방송명',
-        value: 'name',
-        width: "1%"
-      },
-      {
-        text: '사용분',
-        value: 'real_min',
-        width: "1%"
-      },
-      {
-        text: '가중분',
-        value: 'weighted_min',
-        width: "1%"
-      },
-      {
-        text: '방송횟수',
-        value: 'count',
-        width: "1%"
-      }
-    ],
-    filters: {
-      brand: [],
-      category: []
-    }
-  }),
-  computed: {
-    filteredRankItem() {
-      return this.other_name_gruop_data.filter(d => {
-        return Object.keys(this.filters).every(f => {
-          return this.filters[f].length < 1 || this.filters[f].includes(d[f])
-        })
-      })
-    }
-  },
-  methods: {
-    toggleAll() {
-      if (this.selected.length) this.selected = []
-      else this.selected = this.other_name_gruop_data.slice()
-    },
-    changeSort(column) {
-      if (this.pagination.sortBy === column) {
-        this.pagination.descending = !this.pagination.descending
-      } else {
-        this.pagination.sortBy = column
-        this.pagination.descending = false
-      }
-    },
-    columnValueList(val) {
-      return this.other_name_gruop_data.map(d => d[val])
-    }
-  }
-})
-
-let gsRank = Vue.component('gs-rank-component', {
-  template: "#gsRankTemplate",
-  props: ['gs_name_gruop_data', 'selected_category', 'selected_shop'],
-  methods: {
-    categotyCheck: function(category) {
-      if (category === this.selected_category || this.selected_category === "all") return true;
-      else return false;
-    },
-  }
-});
-
-let clist = new Vue({
-  el: '#app',
-  data: {
-    other_name_gruop_data: [],
-    gs_name_gruop_data: [],
-    selected_category: "all",
-    selected_shop: ["hnsmall", "cjmall", "lottemall", "immall", "nsmall", "ssgshop", "hmallplus", "kshop", "cjmallplus", "lotteonetv", "shopnt", "wshop", "bshop", "nsmallplus", "hmall"],
-    current_page: 1,
-    show_modal: false,
-    history: [],
-    page: 1,
-    download: false
-
-  },
-  components: {
-    otherRank: otherRank,
-    gsRank: gsRank,
-    allRank: allRank
-  },
-  methods: {
-    getData: function() {
-      $('body').ploading({
-        action: 'show'
-      });
-
-      let period = ($('.datepicker-here').val()).split(' ~ ');
-      let flag = periodValidator(period[0], period[1], "click");
-
-      if (flag == true) {
-        $.ajax({
-          url: "/getScheduleData",
-          type: "POST",
-          dataType: "json",
-          data: {
-            dateFrom: period[0],
-            dateTo: period[1]
-          },
-          success: (data) => {
-            // console.log(data.result);
-            let other_data = data.other_grouped_weight_data;
-            console.log(other_data);
-            down_data = other_data;
-            let gs_data = data.gs_grouped_weight_data;
-
-            this.gs_name_gruop_data = gs_data;
-            sortByWeightedMin(this.gs_name_gruop_data);
-
-            this.other_name_gruop_data = other_data;
-
-            $('.shop_category').css('display', 'flex');
-
-            $('body').ploading({
-              action: 'hide'
-            });
-
-            this.download = true;
-          },
-          error: (e) => {
-            console.error(e);
-            // $.hideLoading();
-          }
-        })
-      }
     },
     excelDownload: function(){
       download();
     }
+  },
+})
+
+let clist = new Vue({
+  el: '#app',
+  data: {
+    selected_category: "all",
+    selected_shop: ["hnsmall", "cjmall", "lottemall", "immall", "nsmall", "ssgshop", "hmallplus", "kshop", "cjmallplus", "lotteonetv", "shopnt", "wshop", "bshop", "nsmallplus", "hmall"],
+    show_modal: false,
+    history: [],
+  },
+  components: {
+    allRank: allRank
   }
 })

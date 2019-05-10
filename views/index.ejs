@@ -2,15 +2,22 @@
 <html>
 
 <head>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-91675162-15"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-    gtag('config', 'UA-91675162-15');
+  gtag('config', 'UA-91675162-15');
   </script>
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TGT3S93');</script>
+<!-- End Google Tag Manager -->
 
   <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
@@ -18,51 +25,43 @@
 </head>
 
 <body>
-  <div class="container">
-    <% include ./header.ejs %>
-    <div class="content">
-      <div class="col-md-10 offset-1">
-        <div class="target_area row">
-          <div class="col-md-6 target_img">
-            <img width="350" src="img/target.png" />
-          </div>
-          <div class="col-md-6 align-self-center row">
-            <div class="col-md-1">
-              <span>1</span>
-            </div>
-            <div>
-              <p>TARGET RADAT</p>
-              <h2>경쟁사는 일정기간동안</h2>
-              <h2>어떤 상품을 많이 팔았을까요?</h2>
-              <p>우리 회사 가중분 기준으로 동일 기간 내</p>
-              <p>16개사 경쟁 홈쇼핑사의 편성현황을 비교해보세요.</p>
-              <a href="/target"> >></a>
-            </div>
-          </div>
-        </div>
-        <div class="schedule_area row">
-          <div class="col-md-6 align-self-center row">
-            <div class="col-md-1">
-              <span>2</span>
-            </div>
-            <div>
-              <p>SCHEDULE RADAT</p>
-              <h2>경쟁사 편성표를 한 판으로</h2>
-              <h2>빠르게 체크해보세요!</h2>
-              <p>막내 MD들 여태짜기 아카이빙하느라 토닥토닥!</p>
-              <p>한 판으로 빠르게 비교해보고 대응해보아요!</p>
-              <a href="/schedule"> >></a>
-            </div>
-          </div>
-          <div class="col-md-6 schedule_img">
-            <img width="350" src="img/schedule.png" />
-          </div>
-        </div>
+  <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TGT3S93"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+  <% include ./header.ejs %>
+  <div class="index_content">
+    <div class="target_area">
+      <div class="number_box">
+        <div class="circle_number">1</div>
+      </div>
+      <div class="service_info">
+        <p class="title_text">타겟레이더</p>
+        <p class="big_info first">경쟁사는 일정기간동안</p>
+        <p class="big_info">어떤 상품을 많이 팔았을까요?</p>
+        <p class="small_info">우리 회사 가중분 기준으로 동일 기간 내</p>
+        <p class="small_info">16개사 경쟁 홈쇼핑사의 편성현황을 비교해보세요.</p>
+        <a class="arrow_link target_link" href="/target"><i class="material-icons">arrow_forward</i></a>
+        <img width="335" src="img/target.svg" />
+      </div>
+    </div>
+    <div class="schedule_area">
+      <div class="number_box">
+        <div class="circle_number">2</div>
+      </div>
+      <div class="service_info">
+        <p class="title_text">편성레이더</p>
+        <p class="big_info first">경쟁사 편성표를 한 판으로</p>
+        <p class="big_info">빠르게 체크해보세요!</p>
+        <p class="small_info">막내 MD들 여태짜기 아카이빙하느라 토닥토닥!</p>
+        <p class="small_info">한 판으로 빠르게 비교해보고 대응해보아요!</p>
+        <a class="arrow_link schedule_link" href="/schedule"><i class="material-icons">arrow_forward</i></a>
+        <img width="309" src="img/schedule.svg" />
       </div>
     </div>
   </div>
-
-  <script src="js/bundle.js"></script>
+  <% include ./footer.ejs %>
+<script src="js/bundle.js"></script>
 </body>
 
 </html>

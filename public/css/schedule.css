@@ -31,7 +31,8 @@ Main Components
 .cd-schedule {
   display: none;
   position: relative;
-  margin: 2em 0;
+  /* margin: 2em 0; */
+  margin-top: 35px;
 }
 
 .cd-schedule::before {
@@ -45,7 +46,8 @@ Main Components
     /* width: 95%; */
     width: 100%;
     /* max-width: 1400px; */
-    margin: 2em auto;
+    /* margin: 2em auto; */
+    margin-top: 35px;
   }
   .cd-schedule::after {
     clear: both;
@@ -59,6 +61,10 @@ Main Components
 
 .cd-schedule .timeline {
   display: none;
+}
+
+.timeline ul{
+  padding: 0;
 }
 
 @media only screen and (min-width: 800px) {
@@ -83,13 +89,20 @@ Main Components
     left: 0;
     width: 100%;
     height: 1px;
-    background: #EAEAEA;
+    /* background: #EAEAEA; */
   }
   .cd-schedule .timeline li:last-of-type::after {
     display: none;
   }
   .cd-schedule .timeline li span {
     display: none;
+    font-size: 11px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #444444;
   }
 }
 
@@ -101,8 +114,15 @@ Main Components
   .cd-schedule .timeline li span {
     display: inline-block;
     -webkit-transform: translateY(-50%);
-        -ms-transform: translateY(-50%);
-            transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    font-size: 11px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #444444;
   }
   .cd-schedule .timeline li:nth-of-type(2n) span {
     /* display: none; */
@@ -127,7 +147,13 @@ Main Components
   display: inline-block;
   line-height: 1.2;
   margin-bottom: 10px;
+  font-size: 14px;
   font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #444444;
 }
 
 .cd-schedule .events .events-group > ul {
@@ -154,19 +180,31 @@ Main Components
 .cd-schedule .events .single-event {
   /* force them to stay on one line */
   -ms-flex-negative: 0;
-      flex-shrink: 0;
+  flex-shrink: 0;
   float: left;
   height: 150px;
   width: 70%;
   max-width: 300px;
-  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+  /* box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2); */
   margin-right: 20px;
   -webkit-transition: opacity .2s, background .2s;
   transition: opacity .2s, background .2s;
+  padding: 14px 13px 8px 12px;
+  font-size: 10px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.4;
+  letter-spacing: normal;
+  border-left: solid 1px #dcdde1;
+  border-top: solid 1px #dcdde1;
+  border-right: solid 1px #dcdde1;
 }
 
 .cd-schedule .events .single-event:last-of-type {
   margin-right: 5%;
+  border-bottom: solid 1px #dcdde1;
+  height: 97px !important;
 }
 
 .cd-schedule .events .single-event a {
@@ -213,8 +251,14 @@ Main Components
     padding: 0 .5em;
     text-align: center;
     /* reset style */
-    font-weight: normal;
     margin-bottom: 0;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #444444;
   }
   .cd-schedule .events .events-group > ul {
     height: 950px;
@@ -238,13 +282,20 @@ Main Components
     /* top position and height will be set using js */
     width: calc(100% + 2px);
     left: -1px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+    /* box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), inset 0 -3px 0 rgba(0, 0, 0, 0.2); */
     /* reset style */
     -ms-flex-negative: 1;
-        flex-shrink: 1;
+    flex-shrink: 1;
     height: auto;
     max-width: none;
     margin-right: 0;
+    padding: 14px 13px 8px 12px;
+    font-size: 10px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.4;
+    letter-spacing: normal;
   }
   .cd-schedule .events .single-event a {
     /* padding: 1.2em; */
@@ -253,6 +304,8 @@ Main Components
   .cd-schedule .events .single-event:last-of-type {
     /* reset style */
     margin-right: 0;
+    border-bottom: solid 1px #dcdde1;
+    height: 97px !important;
   }
   .cd-schedule .events .single-event.selected-event {
     /* the .selected-event class is added when an user select the event */
@@ -263,14 +316,14 @@ Main Components
 @media only screen and (min-width: 1000px) {
   .cd-schedule .events {
     /* 60px is the .timeline element width */
-    width: calc(100% - 60px);
-    margin-left: 60px;
+    width: calc(100% - 40px);
+    margin-left: 40px;
   }
 }
 
 .cd-schedule.loading .events .single-event {
   /* the class .loading is added by default to the .cd-schedule element
-	   it is removed as soon as the single events are placed in the schedule plan (using javascript) */
+  it is removed as soon as the single events are placed in the schedule plan (using javascript) */
   opacity: 0;
 }
 
@@ -278,7 +331,7 @@ Main Components
 .cd-schedule .event-price,
 .cd-schedule .event-date {
   display: block;
-  color: black;
+  color: #959595;
   font-weight: bold;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -287,10 +340,17 @@ Main Components
 .cd-schedule .event-name, .cd-schedule .event-price {
   /* font-size: 2.4rem; */
   font-size: 5px;
+  color: #242424;
+}
+
+.cd-schedule .event-name{
+  max-height: 49px;
+  overflow-y: scroll;
 }
 
 @media only screen and (min-width: 800px) {
   .cd-schedule .event-name, .cd-schedule .event-price {
+    color: #242424;
     /* font-size: 2rem; */
   }
 }
@@ -351,16 +411,16 @@ Main Components
   visibility: hidden;
   /* Force Hardware acceleration */
   -webkit-transform: translateZ(0);
-          transform: translateZ(0);
+  transform: translateZ(0);
   -webkit-transform: translateX(100%);
-      -ms-transform: translateX(100%);
-          transform: translateX(100%);
+  -ms-transform: translateX(100%);
+  transform: translateX(100%);
   -webkit-transition: visibility .4s, -webkit-transform .4s;
   transition: visibility .4s, -webkit-transform .4s;
   transition: transform .4s, visibility .4s;
   transition: transform .4s, visibility .4s, -webkit-transform .4s;
   -webkit-transition-timing-function: cubic-bezier(0.5, 0, 0.1, 1);
-          transition-timing-function: cubic-bezier(0.5, 0, 0.1, 1);
+  transition-timing-function: cubic-bezier(0.5, 0, 0.1, 1);
 }
 
 .cd-schedule .event-modal .header {
@@ -414,15 +474,15 @@ Main Components
   z-index: 1;
   background: white;
   -webkit-transform-origin: top left;
-      -ms-transform-origin: top left;
-          transform-origin: top left;
+  -ms-transform-origin: top left;
+  transform-origin: top left;
 }
 
 .cd-schedule .event-modal .header-bg {
   z-index: 2;
   -webkit-transform-origin: top center;
-      -ms-transform-origin: top center;
-          transform-origin: top center;
+  -ms-transform-origin: top center;
+  transform-origin: top center;
 }
 
 .cd-schedule .event-modal .close {
@@ -455,14 +515,14 @@ Main Components
 
 .cd-schedule .event-modal .close::before {
   -webkit-transform: translateX(-50%) translateY(-50%) rotate(45deg);
-      -ms-transform: translateX(-50%) translateY(-50%) rotate(45deg);
-          transform: translateX(-50%) translateY(-50%) rotate(45deg);
+  -ms-transform: translateX(-50%) translateY(-50%) rotate(45deg);
+  transform: translateX(-50%) translateY(-50%) rotate(45deg);
 }
 
 .cd-schedule .event-modal .close::after {
   -webkit-transform: translateX(-50%) translateY(-50%) rotate(-45deg);
-      -ms-transform: translateX(-50%) translateY(-50%) rotate(-45deg);
-          transform: translateX(-50%) translateY(-50%) rotate(-45deg);
+  -ms-transform: translateX(-50%) translateY(-50%) rotate(-45deg);
+  transform: translateX(-50%) translateY(-50%) rotate(-45deg);
 }
 
 .cd-schedule .event-modal .event-date {
@@ -486,15 +546,15 @@ Main Components
     width: auto;
     height: auto;
     -webkit-transform: translateX(0);
-        -ms-transform: translateX(0);
-            transform: translateX(0);
+    -ms-transform: translateX(0);
+    transform: translateX(0);
     will-change: transform, width, height;
     -webkit-transition: height .4s, width .4s, visibility .4s, -webkit-transform .4s;
     transition: height .4s, width .4s, visibility .4s, -webkit-transform .4s;
     transition: height .4s, width .4s, transform .4s, visibility .4s;
     transition: height .4s, width .4s, transform .4s, visibility .4s, -webkit-transform .4s;
     -webkit-transition-timing-function: cubic-bezier(0.5, 0, 0.1, 1);
-            transition-timing-function: cubic-bezier(0.5, 0, 0.1, 1);
+    transition-timing-function: cubic-bezier(0.5, 0, 0.1, 1);
   }
   .cd-schedule .event-modal .header {
     position: absolute;
@@ -518,10 +578,10 @@ Main Components
   .cd-schedule .event-modal .header-bg, .cd-schedule .event-modal .body-bg {
     /* Force Hardware acceleration */
     -webkit-transform: translateZ(0);
-            transform: translateZ(0);
+    transform: translateZ(0);
     will-change: transform;
     -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
+    backface-visibility: hidden;
   }
   .cd-schedule .event-modal .header-bg {
     -webkit-transition: -webkit-transform .4s;
@@ -529,13 +589,13 @@ Main Components
     transition: transform .4s;
     transition: transform .4s, -webkit-transform .4s;
     -webkit-transition-timing-function: cubic-bezier(0.5, 0, 0.1, 1);
-            transition-timing-function: cubic-bezier(0.5, 0, 0.1, 1);
+    transition-timing-function: cubic-bezier(0.5, 0, 0.1, 1);
   }
   .cd-schedule .event-modal .body-bg {
     opacity: 0;
     -webkit-transform: none;
-        -ms-transform: none;
-            transform: none;
+    -ms-transform: none;
+    transform: none;
   }
   .cd-schedule .event-modal .event-date {
     display: block;
@@ -563,8 +623,8 @@ Main Components
 .cd-schedule.modal-is-open .event-modal {
   /* .modal-is-open class is added as soon as an event is selected */
   -webkit-transform: translateX(0);
-      -ms-transform: translateX(0);
-          transform: translateX(0);
+  -ms-transform: translateX(0);
+  transform: translateX(0);
   visibility: visible;
 }
 
@@ -577,7 +637,7 @@ Main Components
   .cd-schedule.animation-completed .event-modal .close,
   .cd-schedule.content-loaded.animation-completed .event-modal .event-info {
     /* 	the .animation-completed class is added when the modal animation is completed
-			the .content-loaded class is added when the modal content has been loaded (using ajax) */
+    the .content-loaded class is added when the modal content has been loaded (using ajax) */
     opacity: 1;
     -webkit-transition: opacity .2s;
     transition: opacity .2s;
@@ -589,7 +649,7 @@ Main Components
     transition: transform .4s;
     transition: transform .4s, -webkit-transform .4s;
     -webkit-transition-timing-function: cubic-bezier(0.5, 0, 0.1, 1);
-            transition-timing-function: cubic-bezier(0.5, 0, 0.1, 1);
+    transition-timing-function: cubic-bezier(0.5, 0, 0.1, 1);
   }
 }
 
@@ -616,43 +676,55 @@ Main Components
 
 /* ----------------------------------------------- */
 
-.single-event.cjmall, .header.cjmall .header-bg{
-	background: #fffca4 !important;
+/* .single-event.cjmall, .header.cjmall .header-bg{
+  background: #fffca4 !important;
 }
 
 .single-event.hmall, .header.hmall .header-bg{
-	background: #a2b9b2 !important;
+  background: #a2b9b2 !important;
 }
 
 .single-event.hnsmall, .header.hnsmall .header-bg{
-	background: #9c9dd0 !important;
+  background: #9c9dd0 !important;
 }
 
 .single-event.lottemall, .header.lottemall .header-bg{
-	background: #a97996 !important;
+  background: #a97996 !important;
 }
 
 .single-event.nsmall, .header.nsmall .header-bg{
-	background: #da9497 !important;
+  background: #da9497 !important;
+} */
+
+.single-event{
+  background: white !important;
+}
+
+.events ul{
+  padding: 0;
+}
+
+.price_text{
+  color: #ed0000
 }
 
 
 /* #export .cjmall{
-	background: #fffca4 !important;
+background: #fffca4 !important;
 }
 
 #export .hmall{
-	background: #a2b9b2 !important;
+background: #a2b9b2 !important;
 }
 
 #export .hnsmall{
-	background: #9c9dd0 !important;
+background: #9c9dd0 !important;
 }
 
 #export .lottemall{
-	background: #a97996 !important;
+background: #a97996 !important;
 }
 
 #export .nsmall{
-	background: #da9497 !important;
+background: #da9497 !important;
 } */

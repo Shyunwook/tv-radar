@@ -11,6 +11,13 @@
 
     gtag('config', 'UA-91675162-15');
   </script>
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TGT3S93');</script>
+<!-- End Google Tag Manager -->
 
   <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
@@ -18,59 +25,44 @@
 </head>
 
 <body>
-  <!-- <% include ./header.ejs %> -->
-  <div id="app">
-    <v-app id="inspire">
-      <v-container fluid>
-        <v-layout>
-          <v-flex lg10 offset-lg1>
-            <v-layout column>
-              <v-flex>
-                <v-layout row align-center>
-                  <v-flex shrink>
-                    <h2 style="font-weight: bold;"><i class="fa fa-trophy"></i> TV상품 소싱 레이더</h2>
-                  </v-flex>
-                  <v-flex>
-                    <a class="help" href="https://quip.com/yxmjAhIUtZ9E" target="_blank">도움말</a>
-                  </v-flex>
-                </v-layout>
-                <p class="sub_title">경쟁사의 주력 상품을 보고 타겟소싱의 클루를 찾아 현장에 적용해보아요!</p>
-              </v-flex>
-              <v-flex>
-                <v-layout row align-center class="date_filter">
-                  <v-flex shrink>
-                    <input placeholder="yyyy-mm-dd ~ yyyy-mm-dd" data-range="true" data-multiple-dates-separator=" ~ " data-language="en" class="datepicker-here date_picker" data-date-format="yyyy-mm-dd">
-                  </v-flex>
-                  <v-flex shink>
-                    <v-btn class="btn_search btn-zoey" id="search" @click=getData()>조회</v-btn>
-                    <v-btn id="excel_download" class="btn_search btn-zoey" v-if="download" @click="excelDownload">엑셀 다운로드</v-btn>
-                  </v-flex>
-                </v-layout>
-              </v-flex>
-            </v-layout>
-            <v-layout>
-              <rank-component :other_name_gruop_data="other_name_gruop_data" :gs_name_gruop_data="gs_name_gruop_data"></rank-component>
-            </v-layout>
-          </v-flex>
-        </v-layout>
-      </v-container>
-    </v-app>
+  <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TGT3S93"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+  <% include ./header.ejs %>
+  <div id="app" class="target_content">
+    <rank-component></rank-component>
   </div>
+
 
   <template id="rankTemplate">
     <v-app id="inspire">
       <v-container fluid>
-        <v-layout wrap>
-          <v-flex lg4 pr-3>
-            <v-select flat hide-details small multiple clearable :items="columnValueList('shop')" v-model="filters['shop']" placeholder="경쟁사 필터"></v-select>
-          </v-flex>
-          <v-flex lg4>
-            <v-select flat hide-details small clearable :items="columnValueList('category')" v-model="filters['category']" placeholder="카테고리 필터" @change="gsDataHandler('select')"></v-select>
-          </v-flex>
+        <v-layout class="filter_area row" wrap>
+          <p class="target_title">경쟁사의 주력상품을 보고 타겟소싱의 클루를 찾아 현장에 적용해보아요!</p>
+          <div class="col-md-5 date_filter">
+            <div class="circle_number">1</div><p class="filter_name">조회 기준 기간 선택</p>
+            <input placeholder="시작일 ~ 종료일" data-range="true" data-multiple-dates-separator=" ~ " data-language="en" class="datepicker-here date_picker" data-date-format="yyyy-mm-dd">
+            <button class="btn_search" id="search" @click=getData()>조회</button>
+          </div>
+          <div class="col-md-7 cate_shop_filter">
+            <div class="right_align">
+              <div class="circle_number">2</div><p class="filter_name">카테고리 & 경쟁사 선택</p>
+              <v-select flat hide-details append-icon='$vuetify.icons.expand' small multiple clearable :items="columnValueList('shop')" v-model="filters['shop']" placeholder="경쟁사 필터" class="target_shop_select" @change="selectText"></v-select>
+              <v-select flat hide-details append-icon='$vuetify.icons.expand' small clearable :items="columnValueList('category')" v-model="filters['category']" placeholder="카테고리 필터" class="target_cate_select" @change="gsDataHandler('select')"></v-select>
+            </div>
+          </div>
         </v-layout>
 
-        <v-layout>
+        <v-layout class="func_area">
+          <p class="selected_period" data-date="">기간을 선택해 주세요</p>
+          <v-layout class="right_content">
+            <button id="excel_download" class="tareget_excel" v-if="download"  @click="excelDownload">엑셀 다운로드</button>
+          </v-layout>
+          </div>
+        </v-layout>
 
+        <v-layout class="target_table">
           <v-flex pr-3 pt-3 lg9 sm9>
             <v-data-table :headers="headers" :items="filteredRankItem" :pagination.sync="pagination">
               <template slot="headers" slot-scope="props">
@@ -86,11 +78,11 @@
                 <tr :active="props.selected" @click.stop="$set(dialog, props.item.name, true)">
                   <td class="text-xs-right">{{(props.index+1)+(pagination.page-1)*pagination.rowsPerPage}}</td>
                   <td class="text-xs-right">{{ props.item.shop }}</td>
-                  <td class="text-xs-right">
-                    <v-img :src="props.item.img" width="100px" height="100px" />
+                  <td class="text-xs-right target_img">
+                    <v-img :src="props.item.img" width="90px" height="90px" />
                   </td>
                   <td class="text-xs-right">{{ props.item.brand }}</td>
-                  <td class="text-xs-right">{{ props.item.name }}</td>
+                  <td class="text-xs-right ec_name">{{ props.item.name }}</td>
                   <td class="text-xs-right">{{ props.item.real_min }}분</td>
                   <td class="text-xs-right">{{ props.item.weighted_min }}분</td>
                   <td class="text-xs-right">{{ props.item.count }}회</td>
@@ -116,9 +108,9 @@
 
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn color="primary" flat @click.stop="$set(dialog, props.item.name, false)">
+                      <button color="primary" flat @click.stop="$set(dialog, props.item.name, false)">
                         닫기
-                      </v-btn>
+                      </button>
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
@@ -132,7 +124,7 @@
               <table class="table gs_table">
                 <thead>
                   <div class="gs_title" data-placement="bottom" title="" data-toggle="tooltip" data-original-title="선택한 조건이 적용된 GS SHOP의 데이터">
-                    <h3 class="tb_title_zoey">GS SHOP</h3>
+                    <h6 class="tb_title_zoey">GS SHOP</h6>
                   </div>
                 </thead>
                 <tbody>
@@ -160,6 +152,7 @@
           </v-flex>
 
         </v-layout>
+        <% include ./footer.ejs %>
       </v-container>
     </v-app>
   </template>

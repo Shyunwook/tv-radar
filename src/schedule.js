@@ -1,22 +1,76 @@
 import moment from 'moment';
+import '@atomaras/bootstrap-multiselect';
 
-function schedule(){
+const ITEM_HEIGHT = 96;
+
+export default function schedule(){
 
 	const TIME = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17',
 	'18', '19', '20', '21', '22', '23'];
 
-	let filter_data;
+	const DEFAULT_SHOP = ['cjmall', 'lottemall', 'hnsmall', 'hmall', 'nsmall'];
+	const DEFAULT_CATEGORY = "all"
+
+	let raw_data;
+	let target_shop = JSON.parse(JSON.stringify(DEFAULT_SHOP));
+	let target_category = DEFAULT_CATEGORY;
 
 	$('.schedule_datepicker').datepicker({
-    language: 'en',
-    onHide: function(dp, animationCompleted) {
-      if (!animationCompleted) {
-        let start = dp.selectedDates[0];
-        let end = dp.selectedDates[1];
-        periodValidator(start, end);
-      }
-    }
-  });
+		language: 'en',
+		onHide: function(dp, animationCompleted) {
+			// if (!animationCompleted) {
+			// 	let day = dp.selectedDates[0];
+			// 	let period = setWeekDays(day);
+			//
+			// 	$('.selected_period').text(`${period.start} ~ ${period.end}`);
+			//
+			// 	$('.schedule_datepicker').val("");
+			// 	// getData(period.start, period.end);
+			// 	$('.get_schedule').trigger('click');
+			// }
+		}
+	});
+
+	$('.shop_select').multiselect({
+		buttonWidth: '230px',
+		onChange: function(option, checked, select){
+			let val = option[0].value;
+			if(checked){
+				target_shop.push(val);
+			}else{
+				let idx = target_shop.indexOf(val);
+				if(idx > -1){
+					target_shop.splice(idx,1);
+				}
+			}
+
+			let dateFrom = $($('.events-group')[0]).find('.top-info').data('date');
+			let dateTo = $($('.events-group')[$('.events-group').length - 1]).find('.top-info').data('date');
+
+			let filtered = shopCategoryFilter(raw_data);
+			drawSchedule(filtered, dateFrom, dateTo);
+		},
+		buttonText: function(options, select) {
+			if (options.length === 0) {
+				return '경쟁사 선택';
+			}
+			else if (options.length > 3) {
+				return `${options.length}개 선택됨`;
+			}
+			else {
+				var labels = [];
+				options.each(function() {
+					if ($(this).attr('label') !== undefined) {
+						labels.push($(this).attr('label'));
+					}
+					else {
+						labels.push($(this).html());
+					}
+				});
+				return labels.join(', ') + '';
+			}
+		}
+	});
 
 	var transitionEnd = 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend';
 	var transitionsSupported = ( $('.csstransitions').length > 0 );
@@ -84,8 +138,8 @@ function schedule(){
 
 		this.singleEvents.each(function(){
 			//create the .event-date element for each event
-			var durationLabel = '<span class="event-date">'+$(this).data('start')+' - '+$(this).data('end')+'('+ $(this).data('shop') +')</span>';
-			$(this).children('a').prepend($(durationLabel));
+			var durationLabel = '<span class="event-date">'+$(this).data('start')+' - '+$(this).data('end')+'</span>';
+			$(this).children('a').append($(durationLabel));
 
 			//detect click on the event and open the modal
 			$(this).on('click', 'a', function(event){
@@ -112,25 +166,25 @@ function schedule(){
 		this.singleEvents.each(function(){
 			//place each event in the grid -> need to set top position and height
 			var start = getScheduleTimestamp($(this).attr('data-start')),
-				duration = getScheduleTimestamp($(this).attr('data-end')) - start;
+			duration = getScheduleTimestamp($(this).attr('data-end')) - start;
 
 			var eventTop = self.eventSlotHeight*(start - self.timelineStart)/self.timelineUnitDuration;
 			var eventHeight = self.eventSlotHeight*duration/self.timelineUnitDuration;
 
-				$(this).css({
-					position : 'relative',
-					height : '50px'
-				})
+			$(this).css({
+				position : 'relative',
+				height : ITEM_HEIGHT +'px'
+			})
 
-				if($(this).parent('div').attr('class')!=undefined){
-					var cl = $(this).parent('div').attr('class');
-					var t = cl.split('-')[1];
-					var eventTop = $(`.pa-${t}`).position().top;
-				}
+			if($(this).parent('div').attr('class')!=undefined){
+				var cl = $(this).parent('div').attr('class');
+				var t = cl.split('-')[1];
+				var eventTop = $(`.pa-${t}`).position().top;
+			}
 
 
 			$(this).parent('div').css({
-				height : `${50*$(this).parent('div').children().length}px`,
+				height : `${ITEM_HEIGHT*$(this).parent('div').children().length}px`,
 				position : 'absolute',
 				top : (eventTop -51) +'px',
 				width : '100%'
@@ -171,21 +225,21 @@ function schedule(){
 			});
 		} else {
 			var eventTop = event.offset().top - $(window).scrollTop(),
-				eventLeft = event.offset().left,
-				eventHeight = event.innerHeight(),
-				eventWidth = event.innerWidth();
+			eventLeft = event.offset().left,
+			eventHeight = event.innerHeight(),
+			eventWidth = event.innerWidth();
 
 			var windowWidth = $(window).width(),
-				windowHeight = $(window).height();
+			windowHeight = $(window).height();
 
 			var modalWidth = ( windowWidth*.8 > self.modalMaxWidth ) ? self.modalMaxWidth : windowWidth*.8,
-				modalHeight = ( windowHeight*.8 > self.modalMaxHeight ) ? self.modalMaxHeight : windowHeight*.8;
+			modalHeight = ( windowHeight*.8 > self.modalMaxHeight ) ? self.modalMaxHeight : windowHeight*.8;
 
 			var modalTranslateX = parseInt((windowWidth - modalWidth)/2 - eventLeft),
-				modalTranslateY = parseInt((windowHeight - modalHeight)/2 - eventTop);
+			modalTranslateY = parseInt((windowHeight - modalHeight)/2 - eventTop);
 
 			var HeaderBgScaleY = modalHeight/eventHeight,
-				BodyBgScaleX = (modalWidth - eventWidth);
+			BodyBgScaleX = (modalWidth - eventWidth);
 
 			//change modal height/width and translate it
 			self.modal.css({
@@ -247,15 +301,15 @@ function schedule(){
 			});
 		} else {
 			var eventTop = event.offset().top - $(window).scrollTop(),
-				eventLeft = event.offset().left,
-				eventHeight = event.innerHeight(),
-				eventWidth = event.innerWidth();
+			eventLeft = event.offset().left,
+			eventHeight = event.innerHeight(),
+			eventWidth = event.innerWidth();
 
 			var modalTop = Number(self.modal.css('top').replace('px', '')),
-				modalLeft = Number(self.modal.css('left').replace('px', ''));
+			modalLeft = Number(self.modal.css('left').replace('px', ''));
 
 			var modalTranslateX = eventLeft - modalLeft,
-				modalTranslateY = eventTop - modalTop;
+			modalTranslateY = eventTop - modalTop;
 
 			self.element.removeClass('animation-completed modal-is-open');
 
@@ -314,18 +368,18 @@ function schedule(){
 			var event = self.eventsGroup.find('.selected-event');
 
 			var eventTop = event.offset().top - $(window).scrollTop(),
-				eventLeft = event.offset().left,
-				eventHeight = event.innerHeight(),
-				eventWidth = event.innerWidth();
+			eventLeft = event.offset().left,
+			eventHeight = event.innerHeight(),
+			eventWidth = event.innerWidth();
 
 			var windowWidth = $(window).width(),
-				windowHeight = $(window).height();
+			windowHeight = $(window).height();
 
 			var modalWidth = ( windowWidth*.8 > self.modalMaxWidth ) ? self.modalMaxWidth : windowWidth*.8,
-				modalHeight = ( windowHeight*.8 > self.modalMaxHeight ) ? self.modalMaxHeight : windowHeight*.8;
+			modalHeight = ( windowHeight*.8 > self.modalMaxHeight ) ? self.modalMaxHeight : windowHeight*.8;
 
 			var HeaderBgScaleY = modalHeight/eventHeight,
-				BodyBgScaleX = (modalWidth - eventWidth);
+			BodyBgScaleX = (modalWidth - eventWidth);
 
 			setTimeout(function(){
 				self.modal.css({
@@ -391,8 +445,8 @@ function schedule(){
 
 	function transformElement(element, value) {
 		element.css({
-				'-moz-transform': value,
-				'-webkit-transform': value,
+			'-moz-transform': value,
+			'-webkit-transform': value,
 			'-ms-transform': value,
 			'-o-transform': value,
 			'transform': value
@@ -400,19 +454,12 @@ function schedule(){
 	}
 
 	function getData(start, end){
+		$('.events-group').remove();
 		$('body').ploading({
 			action: 'show'
 		});
 		let dateFrom = moment(start).format("YYYY-MM-DD");
 		let dateTo = moment(end).format("YYYY-MM-DD");
-		let period = [];
-		let day = dateFrom;
-
-		let diff = moment(dateTo).diff(dateFrom,"days",);
-		for(let i = 0; i <= diff; i ++){
-			period.push(moment(day).format("YYYY-MM-DD"));
-			day = moment(day).add(1,'days');
-		}
 
 		$.ajax({
 			url: "https://fy2b0csnq7.execute-api.us-west-2.amazonaws.com/prod/vaccine-c-api",
@@ -420,42 +467,55 @@ function schedule(){
 			data: JSON.stringify({dateFrom:dateFrom,dateTo:dateTo}),
 			contentType: 'application/json',
 			success: function(data) {
-				$('body').ploading({
-					action: 'hide'
-				});
+				target_shop = JSON.parse(JSON.stringify(DEFAULT_SHOP));
+
 				$('.cd-schedule').show();
-				let time_obj = {};
-				let schedule = {};
+				raw_data = JSON.parse(JSON.stringify(data));
 
-				TIME.forEach((time) => {
-					time_obj[time] = [];
-				})
-
-				period.forEach((date) => {
-					schedule[date] = JSON.parse(JSON.stringify(time_obj));
-				})
-
-				let target_shop = ['cjmall', 'lottemall', 'hnsmall', 'hmall', 'nsmall'];
-				filter_data = data.filter((val) => {
-					return target_shop.indexOf(val.shop) > -1;
-				})
-
-				console.log(data);
-				console.log(filter_data);
-				$('.excel').style = 'display : inline-block !important';
-				$('.schedule_select').style = 'display : block !important';
-				console.log($('.excel').style);
-
-				classifyScheduleData(filter_data, schedule);
-				setTimelineHeight(schedule);
-				let schedules = setScheduleData(schedule, SchedulePlan);
+				let filtered = shopCategoryFilter(raw_data);
+				drawSchedule(filtered, dateFrom, dateTo);
 				$('.schedule_excel').show();
-				$('.schedule_select').show();
+				$('.schedule_category').show();
+				$('.schedule_shop').show();
+				$('.schedule_datepicker').val("");
+				filterActivate();
 			},
 			error: function(e){
 				console.log(e);
 			}
 		});
+	}
+
+	function filterActivate(){
+		$('.category_select').prop('disabled',false);
+		$('.shop_select').prop('disabled',false);
+		$('.schedule_shop button').prop('disabled',false);
+		$('.schedule_shop button').removeClass('disabled');
+
+		$('.category_select option[value="all"]').prop('selected',true);
+		let leng = $('.multiselect-container').children().length;
+
+		for(let i = 0; i < leng; i++){
+			let target = $('.multiselect-container').children()[i];
+			if(DEFAULT_SHOP.indexOf($(target).find('input').val()) > -1 && !$(target).hasClass('active')){
+				$(target).find('label').trigger('click');
+			}else if(DEFAULT_SHOP.indexOf($(target).find('input').val()) === -1 && $(target).hasClass('active')){
+				$(target).find('label').trigger('click');
+			}
+		}
+
+		target_shop = JSON.parse(JSON.stringify(DEFAULT_SHOP));
+		$('body').ploading({
+			action: 'hide'
+		});
+	}
+
+	function shopCategoryFilter(data){
+		let temp = data.filter((val) => {
+			return target_shop.indexOf(val.shop) > -1 &&
+			(val.category === target_category || target_category === "all");
+		})
+		return temp;
 	}
 
 	function classifyScheduleData(data, schedule){
@@ -475,9 +535,9 @@ function schedule(){
 				}
 			})
 
-			let height = max * 50;
+			let height = max * ITEM_HEIGHT;
 			$(`.pa-${val}`).css({
-				height : height > 0 ? height : 50
+				height : height > 0 ? height : ITEM_HEIGHT
 			});
 		})
 	}
@@ -485,12 +545,12 @@ function schedule(){
 	function setScheduleData(schedule, SchedulePlan){
 
 		Object.keys(schedule).forEach((date) => {
-			let day = {0: 'Sunday', 1: 'Monday', 2: 'Tuesday', 3: 'Wednesday', 4: 'Thursday', 5: 'Friday', 6: 'Saturday'};
+			let day = {0: '일', 1: '월', 2: '화', 3: '수', 4: '목', 5: '금', 6: '토'};
 			let day_flag = moment(date).day();
 
 			let content =
 			`<li class="events-group">
-				<div class="top-info" data-date="${date}"><span>${day[day_flag]} / ${moment(date).format('YY-MM-DD')}</span></div>
+			<div class="top-info" data-date="${date}"><span>${moment(date).format('MM/DD')} ${day[day_flag]}</span></div>
 			<ul>`;
 
 			Object.keys(schedule[date]).forEach((time) => {
@@ -498,12 +558,13 @@ function schedule(){
 				schedule[date][time].forEach((item) => {
 					let li =
 					`<li class="single-event ${item.shop}" data-start="${item.start_time}" data-end="${item.end_time}"  data-content="${item.item}" data-event="event-3"
-					 data-shop="${item.shop}">
-						<a href="#0" data-link="${item.link}">
-							<em class="event-name">${item.item}  ${item.price}</em>
-							<em class="event-price" style="display:none">${item.price}</em>
-							<em class="event-shop" style="display:none">${item.shop}</em>
-						</a>
+					data-shop="${item.shop}">
+					<a href="#0" data-link="${item.link}">
+					<em class="event-name"><img src="img/badge/${item.shop}.svg">${item.item}</em>
+					<em class="price_text">${item.price.length < 3 || item.price.length === undefined ? '' : item.price}</em>
+					<em class="event-price" style="display:none">${item.price}</em>
+					<em class="event-shop" style="display:none">${item.shop}</em>
+					</a>
 					</li>`;
 					content += li;
 				})
@@ -511,7 +572,7 @@ function schedule(){
 			})
 
 			content +=
-				`</ul>
+			`</ul>
 			</li>`;
 
 			$('.event_day').append(content);
@@ -539,131 +600,8 @@ function schedule(){
 		}
 	}
 
-	$('.schedule_excel').on('click', function(){
-		let time_obj = {};
-		TIME.forEach((time) => {
-			time_obj[time] = {};
-		})
-
-		let time_col = $('.timeline ul li');
-		let event_group = $('.events-group');
-
-		for(let i = 0; i < time_col.length; i ++){ // 시간 줄
-			let target = $(time_col[i]).attr('class').split('-')[1];
-
-				let max = 0;
-				for(let j = 0; j < event_group.length; j ++){ // 각 시간에 해당하는 div
-					let target_div = $(event_group[j]).find(`.ch-${target}`);
-
-					if(max < $(target_div).find('li').length){
-						max = $(target_div).find('li').length;
-					}
-
-				}
-
-				// for(let m = 0; m < max; m ++){
-				// 	time_obj[target][m] = [];
-				// }
-				time_obj[target] = [];
-
-				if(max == 0){
-					let temp_arr = [];
-					for(let j = 0; j < event_group.length; j ++){
-						temp_arr.push({});
-					}
-					time_obj[target].push(temp_arr);
-				}else{
-					for(let i = 0; i < max; i ++){
-						let temp_arr = [];
-						for(let j = 0; j < event_group.length; j ++){ // 각 시간에 해당하는 div
-							let target_div = $(event_group[j]).find(`.ch-${target}`);
-							let li = $(target_div).find('li');
-							if(li[i] != undefined){
-								temp_arr.push({
-									name : $(li[i]).find('.event-name').text(),
-									shop : $(li[i]).data('shop'),
-									price : $(li[i]).find('.event-price').text(),
-									time : `${$(li[i]).data('start')} ~ ${$(li[i]).data('end')}`
-								});
-							}else {
-								temp_arr.push({});
-							}
-						}
-						time_obj[target].push(temp_arr);
-					}
-				}
-
-		}
-		console.log(time_obj);
-
-
-		//---------------------------------------------------------
-		// 레이아웃 만들기 시작
-		let dateFrom = $($('.events-group')[0]).find('.top-info').data('date');
-		let dateTo = $($('.events-group')[$('.events-group').length - 1]).find('.top-info').data('date');
-		let period = [];
-		let day = dateFrom;
-
-		let diff = moment(dateTo).diff(dateFrom,"days",);
-		for(let i = 0; i <= diff; i ++){
-			period.push(moment(day).format("YYYY-MM-DD"));
-			day = moment(day).add(1,'days');
-		}
-
-		let day_obj = {0: 'Sunday', 1: 'Monday', 2: 'Tuesday', 3: 'Wednesday', 4: 'Thursday', 5: 'Friday', 6: 'Saturday'};
-
-		let content = `<table id="export" style="display:none">`;
-
-		content += `<tr>`;
-		content += `<th>시간</th>`;
-		period.forEach((date) => {
-			let day_flag = moment(date).day();
-			content += `<th>${day_obj[day_flag]} / ${moment(date).format('YY-MM-DD')}</th>`;
-		})
-		content += `</tr>`;
-
-		let time = Object.keys(time_obj).sort();
-		let colors = {
-			cjmall: "#fffca4",
-			hmall: "#a2b9b2",
-			hnsmall: "#9c9dd0",
-			lottemall: "#a97996",
-			nsmall: "#da9497"
-		}
-
-		time.forEach((val) => {
-			content += `<tr>`;
-			content += `<td rowspan=${time_obj[val].length}>${val}00</td>`;
-			time_obj[val][0].forEach((td) => {
-				content += `<td class="${td.shop}" style="background: ${colors[td.shop]}">${td.time ? td.time + ' / ' : ''}${td.shop? '(' + td.shop + ')' : ''}${td.name? td.name : ''}&nbsp&nbsp${td.price? td.price : ''}</td>`;
-			})
-			content += `</tr>`;
-			for(let i = 1; i < time_obj[val].length; i ++){
-				content += `<tr>`;
-				time_obj[val][i].forEach((td) => {
-					content += `<td class="${td.shop}" style="background: ${colors[td.shop]}">${td.time ? td.time + ' / ' : ''}${td.shop? '(' + td.shop + ')' : ''}${td.name? td.name : ''}&nbsp&nbsp${td.price? td.price : ''}</td>`;
-				})
-				content += `</tr>`;
-			}
-		})
-		content += `</table>`
-
-
-		$('.excel_table').append(content);
-
-		tableToExcel('export','test');
-		$('#export').remove();
-		//---------------------------------------------------------
-	});
-
-	$('.schedule_category').on('change', function(){
-		let cate = $(this).val();
-		console.log(cate);
-		let dateFrom = $($('.events-group')[0]).find('.top-info').data('date');
-		let dateTo = $($('.events-group')[$('.events-group').length - 1]).find('.top-info').data('date');
-
+	function drawSchedule(data, dateFrom, dateTo){
 		$('.events-group').remove();
-
 		let time_obj = {};
 		let schedule = {};
 		let period = [];
@@ -683,13 +621,137 @@ function schedule(){
 			schedule[date] = JSON.parse(JSON.stringify(time_obj));
 		})
 
-		let beauty = filter_data.filter( val => {
-			return val.category === cate || cate === "all";
+		classifyScheduleData(data, schedule);
+		setTimelineHeight(schedule);
+		setScheduleData(schedule, SchedulePlan);
+	}
+
+	$('.schedule_excel').on('click', function(){
+		let time_obj = {};
+		TIME.forEach((time) => {
+			time_obj[time] = {};
 		})
 
-		classifyScheduleData(beauty, schedule);
-		setTimelineHeight(schedule);
-		let schedules = setScheduleData(schedule, SchedulePlan);
+		let time_col = $('.timeline ul li');
+		let event_group = $('.events-group');
+
+		for(let i = 0; i < time_col.length; i ++){ // 시간 줄
+			let target = $(time_col[i]).attr('class').split('-')[1];
+
+			let max = 0;
+			for(let j = 0; j < event_group.length; j ++){ // 각 시간에 해당하는 div
+				let target_div = $(event_group[j]).find(`.ch-${target}`);
+
+				if(max < $(target_div).find('li').length){
+					max = $(target_div).find('li').length;
+				}
+
+			}
+
+			// for(let m = 0; m < max; m ++){
+			// 	time_obj[target][m] = [];
+			// }
+			time_obj[target] = [];
+
+			if(max == 0){
+				let temp_arr = [];
+				for(let j = 0; j < event_group.length; j ++){
+					temp_arr.push({});
+				}
+				time_obj[target].push(temp_arr);
+			}else{
+				for(let i = 0; i < max; i ++){
+					let temp_arr = [];
+					for(let j = 0; j < event_group.length; j ++){ // 각 시간에 해당하는 div
+						let target_div = $(event_group[j]).find(`.ch-${target}`);
+						let li = $(target_div).find('li');
+						if(li[i] != undefined){
+							temp_arr.push({
+								name : $(li[i]).find('.event-name').text(),
+								shop : $(li[i]).data('shop'),
+								price : $(li[i]).find('.event-price').text(),
+								time : `${$(li[i]).data('start')} ~ ${$(li[i]).data('end')}`
+							});
+						}else {
+							temp_arr.push({});
+						}
+					}
+					time_obj[target].push(temp_arr);
+				}
+			}
+
+		}
+		console.log(time_obj);
+
+
+		//---------------------------------------------------------
+		// 레이아웃 만들기 시작
+		let dateFrom = $($('.events-group')[0]).find('.top-info').data('date');
+		let dateTo = $($('.events-group')[$('.events-group').length - 1]).find('.top-info').data('date');
+		let period = [];
+		let day = dateFrom;
+
+		let diff = moment(dateTo).diff(dateFrom,"days",);
+		for(let i = 0; i <= diff; i ++){
+			period.push(moment(day).format("YYYY-MM-DD"));
+			day = moment(day).add(1,'days');
+		}
+
+		let day_obj = {0: '일', 1: '월', 2: '화', 3: '수', 4: '목', 5: '금', 6: '토'};
+
+		let content = `<table id="export" style="display:none">`;
+
+		content += `<tr>`;
+		content += `<th>시간</th>`;
+		period.forEach((date) => {
+			let day_flag = moment(date).day();
+			content += `<th>${moment(date).format('MM/DD')} ${day_obj[day_flag]}</th>`;
+		})
+		content += `</tr>`;
+
+		let time = Object.keys(time_obj).sort();
+		let colors = {
+			cjmall: "#fffca4",
+			hmall: "#a2b9b2",
+			// hnsmall: "#9c9dd0",
+			lottemall: "#a97996",
+			// nsmall: "#da9497"
+		}
+
+		time.forEach((val) => {
+			content += `<tr>`;
+			content += `<td rowspan=${time_obj[val].length}>${val}00</td>`;
+			time_obj[val][0].forEach((td) => {
+				content += `<td class="${td.shop}" style="background: ${colors[td.shop]?colors[td.shop] : 'white'}">${td.time ? td.time + ' / ' : ''}${td.shop? '(' + td.shop + ')' : ''}${td.name? td.name : ''}&nbsp&nbsp${td.price? td.price : ''}</td>`;
+			})
+			content += `</tr>`;
+			for(let i = 1; i < time_obj[val].length; i ++){
+				content += `<tr>`;
+				time_obj[val][i].forEach((td) => {
+					content += `<td class="${td.shop}" style="background: ${colors[td.shop]?colors[td.shop] : 'white'}">${td.time ? td.time + ' / ' : ''}${td.shop? '(' + td.shop + ')' : ''}${td.name? td.name : ''}&nbsp&nbsp${td.price? td.price : ''}</td>`;
+				})
+				content += `</tr>`;
+			}
+		})
+		content += `</table>`
+
+
+		$('.excel_table').append(content);
+
+		tableToExcel('export','편성');
+		$('#export').remove();
+		//---------------------------------------------------------
+	});
+
+	$('.category_select').on('change', function(){
+		let cate = $(this).val();
+
+		let dateFrom = $($('.events-group')[0]).find('.top-info').data('date');
+		let dateTo = $($('.events-group')[$('.events-group').length - 1]).find('.top-info').data('date');
+
+		target_category = cate;
+		let filtered = shopCategoryFilter(raw_data);
+		drawSchedule(filtered, dateFrom, dateTo);
 	})
 
 	$('.get_schedule').on('click',function(){
@@ -697,21 +759,55 @@ function schedule(){
 		$('.schedule_select').hide();
 		$('.cd-schedule').hide();
 		$('.events-group').remove();
-		let period = ($('.schedule_datepicker').val()).split(' ~ ');
+		let period = ($('.selected_period').data('date')).split(' ~ ');
 		getData(period[0], period[1]);
 	})
 
+	$('.pre_week').on('click', function(){
+		target_category = DEFAULT_CATEGORY;
+
+		let period = ($('.selected_period').data('date')).split(' ~ ');
+		let start = moment(period[0]).add(-7,'days').calendar('YYYY-MM-DD');
+		let end = moment(period[1]).add(-7,'days').calendar('YYYY-MM-DD');
+
+		$('.selected_period').text(`${moment(start).format('YYYY년 MM월 DD일')} ~ ${moment(end).format('YYYY년 MM월 DD일')}`);
+		$('.selected_period').data('date',`${moment(start).format('YYYY-MM-DD')} ~ ${moment(end).format('YYYY-MM-DD')}`);
+		$('.get_schedule').trigger('click');
+	})
+
+	$('.next_week').on('click', function(){
+		target_category = DEFAULT_CATEGORY;
+
+		let period = ($('.selected_period').data('date')).split(' ~ ');
+		let start = moment(period[0]).add(7,'days').calendar('YYYY-MM-DD');
+		let end = moment(period[1]).add(7,'days').calendar('YYYY-MM-DD');
+		$('.selected_period').text(`${moment(start).format('YYYY년 MM월 DD일')} ~ ${moment(end).format('YYYY년 MM월 DD일')}`);
+		$('.selected_period').data('date',`${moment(start).format('YYYY-MM-DD')} ~ ${moment(end).format('YYYY-MM-DD')}`);
+		$('.get_schedule').trigger('click');
+	})
+
 	var tableToExcel = (function() {
-	  var uri = 'data:application/vnd.ms-excel;base64,'
-	    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
-	    , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
-	    , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
-	  return function(table, name) {
-	    if (!table.nodeType) table = document.getElementById(table)
-	    var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
-	    window.location.href = uri + base64(format(template, ctx))
-	  }
+		var uri = 'data:application/vnd.ms-excel;base64,'
+		, template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+		, base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+		, format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+		return function(table, name) {
+			if (!table.nodeType) table = document.getElementById(table)
+			var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+			window.location.href = uri + base64(format(template, ctx))
+		}
 	})()
 }
 
-export default schedule;
+export function setWeekDays(day){
+	let d = moment(day).day();
+	let start = moment(day).add((-d+1),'days').calendar('YYYY-MM-DD');
+	let end = moment(day).add((7-d),'days').calendar('YYYY-MM-DD');
+
+	start = moment(start).format('YYYY-MM-DD');
+	end = moment(end).format('YYYY-MM-DD');
+
+	return {start : start, end : end};
+}
+
+// export default schedule, {setWeekDays};
