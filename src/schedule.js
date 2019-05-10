@@ -763,31 +763,54 @@ export default function schedule(){
 		let period = setWeekDays(moment($('.schedule_datepicker').val()));
 		$('.selected_period').text(`${moment(period.start).format("YYYY년 MM월 DD일")} ~ ${moment(period.end).format("YYYY년 MM월 DD일")}`);
     $('.selected_period').data('date',`${moment(period.start).format('YYYY-MM-DD')} ~ ${moment(period.end).format('YYYY-MM-DD')}`);
-
+		console.log(moment(period.start).format("YYYY년 MM월 DD일"));
 		getData(period.start, period.end);
 	})
 
 	$('.pre_week').on('click', function(){
 		target_category = DEFAULT_CATEGORY;
 
-		let period = ($('.selected_period').data('date')).split(' ~ ');
+		let temp = $('.selected_period').text();
+		temp = temp.replace(/년 /gi,'-');
+		temp = temp.replace(/월 /gi,'-');
+		temp = temp.replace(/일/gi,'');
+
+		let period = temp.split(' ~ ');
 		let start = moment(period[0]).add(-7,'days').calendar('YYYY-MM-DD');
 		let end = moment(period[1]).add(-7,'days').calendar('YYYY-MM-DD');
 
 		$('.selected_period').text(`${moment(start).format('YYYY년 MM월 DD일')} ~ ${moment(end).format('YYYY년 MM월 DD일')}`);
 		$('.selected_period').data('date',`${moment(start).format('YYYY-MM-DD')} ~ ${moment(end).format('YYYY-MM-DD')}`);
-		$('.get_schedule').trigger('click');
+
+		$('.schedule_excel').hide();
+		$('.schedule_select').hide();
+		$('.cd-schedule').hide();
+		$('.events-group').remove();
+
+		getData(moment(start).format('YYYY-MM-DD'), moment(end).format('YYYY-MM-DD'));
 	})
 
 	$('.next_week').on('click', function(){
 		target_category = DEFAULT_CATEGORY;
 
-		let period = ($('.selected_period').data('date')).split(' ~ ');
+		let temp = $('.selected_period').text();
+		temp = temp.replace(/년 /gi,'-');
+		temp = temp.replace(/월 /gi,'-');
+		temp = temp.replace(/일/gi,'');
+
+		let period = temp.split(' ~ ');
+		console.log(period);
 		let start = moment(period[0]).add(7,'days').calendar('YYYY-MM-DD');
 		let end = moment(period[1]).add(7,'days').calendar('YYYY-MM-DD');
 		$('.selected_period').text(`${moment(start).format('YYYY년 MM월 DD일')} ~ ${moment(end).format('YYYY년 MM월 DD일')}`);
 		$('.selected_period').data('date',`${moment(start).format('YYYY-MM-DD')} ~ ${moment(end).format('YYYY-MM-DD')}`);
-		$('.get_schedule').trigger('click');
+
+		$('.schedule_excel').hide();
+		$('.schedule_select').hide();
+		$('.cd-schedule').hide();
+		$('.events-group').remove();
+
+		getData(moment(start).format('YYYY-MM-DD'), moment(end).format('YYYY-MM-DD'));
 	})
 
 	var tableToExcel = (function() {
