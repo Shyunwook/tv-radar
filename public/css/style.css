@@ -735,6 +735,7 @@ table.v-table tbody td:first-child, table.v-table tbody td:not(:first-child), ta
   text-align: center;
   color: #00a7b8;
   float: right;
+  display: none;
 }
 
 .application--wrap .layout.func_area .tareget_excel{
