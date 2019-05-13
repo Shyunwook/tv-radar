@@ -1,6 +1,4 @@
-html body{
-  font-family: NotoSansKR !important;
-}
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
 
 .date_picker{
   background: white;
@@ -80,7 +78,7 @@ html body{
 }
 
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Noto Sans KR';
   font-weight: 400;
   font-size: 16px;
   line-height: 1.625;
@@ -92,7 +90,7 @@ body {
 html body{
   font-size: 14px;
   height: 100vh;
-  font-family: NotoSansKR !important;
+  font-family: 'Noto Sans KR';
 }
 
 .gs_title{
@@ -266,12 +264,15 @@ td{
   letter-spacing: normal;
   text-align: center;
   color: #4a4a4a;
-  text-decoration: none;
-
+  text-decoration: none !important;
   position: absolute;
   right: 37px;
   top: 50%;
   transform: translate(0,-40%);
+}
+
+.help:hover{
+  color: #4a4a4a;
 }
 
 .right_content{
@@ -703,6 +704,8 @@ table.v-table tbody td:first-child, table.v-table tbody td:not(:first-child), ta
 }
 
 .pre_week span{
+  height: 24px;
+  line-height: 24px;
   margin-right: 10px;
 }
 
@@ -718,6 +721,8 @@ table.v-table tbody td:first-child, table.v-table tbody td:not(:first-child), ta
 }
 
 .week_btn_box span{
+  height: 24px;
+  line-height: 24px;
   vertical-align: text-bottom;
 }
 
@@ -936,4 +941,8 @@ table.v-table thead th:not(:first-child){
 
 .schedule_shop .btn.disabled,.schedule_shop .btn:disabled{
   opacity: 1;
+}
+
+.event_name{
+  font-size: 10px;
 }

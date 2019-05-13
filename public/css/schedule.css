@@ -346,6 +346,7 @@ Main Components
 .cd-schedule .event-name{
   max-height: 49px;
   overflow-y: scroll;
+  font-size: 10px !important
 }
 
 @media only screen and (min-width: 800px) {
