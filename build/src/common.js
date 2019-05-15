@@ -14,6 +14,8 @@ var _moment = _interopRequireDefault(require("moment"));
 
 var _lodash = _interopRequireDefault(require("lodash"));
 
+var _cheerio = _interopRequireDefault(require("cheerio"));
+
 module.exports = function () {
   return {
     setScheduleData: function setScheduleData(period, data) {
@@ -121,9 +123,42 @@ module.exports = function () {
           }
         });
       });
+    },
+    getHsmoaDoc: function getHsmoaDoc(date, name, res) {
+      var url = "http://hsmoa.com/?date=".concat(date, "&site=&cate=");
+      (0, _request.default)({
+        url: url,
+        method: 'GET',
+        json: true,
+        encoding: null
+      }, function (error, response, data) {
+        if (error) {
+          console.error(error);
+        } else if (response.statusCode === 200) {
+          getLowerItem(name, data, res);
+        } else {
+          console.log(response.statusCode);
+        }
+      });
     }
   };
 }();
+
+function getLowerItem(name, data, res) {
+  var $ = _cheerio.default.load(data);
+
+  var target = $(".font-15:contains(".concat(name, ")")).parent().parent().parent().parent().children('.sametime-block');
+  var lower_items = $(target).find('.sametime-item');
+
+  if (lower_items.length <= 0) {
+    // return "하위 구성 없음";
+    console.log('하위 구성 없음');
+    res.send('하위 구성 없음');
+  } else {
+    console.log(lower_items.length);
+    res.send(lower_items.length.toString()); // return lower_items;
+  }
+}
 
 function getSpecificDateData(key, cursor, cacheClient, result) {
   return new Promise(function (resolve, reject) {

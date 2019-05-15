@@ -162,4 +162,11 @@ function () {
     return _ref2.apply(this, arguments);
   };
 }()));
+router.post('/test', function (req, res) {
+  var name = req.body.name;
+  var date = req.body.date;
+  console.log(name, date);
+
+  _common.default.getHsmoaDoc(date.toString(), name, res);
+});
 module.exports = router;

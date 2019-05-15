@@ -2,6 +2,7 @@ import request from 'request';
 import fs from 'fs';
 import moment from 'moment';
 import _ from 'lodash';
+import cheerio from 'cheerio';
 
 module.exports = (() => {
   return {
@@ -75,9 +76,45 @@ module.exports = (() => {
           }
         })
       })
+    },
+
+    getHsmoaDoc : (date, name, res) => {
+      let url = `http://hsmoa.com/?date=${date}&site=&cate=`;
+
+      request({
+        url : url,
+        method : 'GET',
+        json : true,
+        encoding : null
+      },(error, response, data) => {
+        if(error){
+          console.error(error);
+
+        }else if(response.statusCode === 200){
+          getLowerItem(name, data, res);
+        }else{
+          console.log(response.statusCode);
+
+        }
+      })
     }
   }
 })();
+
+function getLowerItem(name, data, res){
+  let $ = cheerio.load(data);
+  let target = $(`.font-15:contains(${name})`).parent().parent().parent().parent().children('.sametime-block');
+  let lower_items = $(target).find('.sametime-item');
+  if(lower_items.length <= 0){
+    // return "하위 구성 없음";
+    console.log('하위 구성 없음');
+    res.send('하위 구성 없음');
+  }else{
+    console.log(lower_items.length);
+    res.send((lower_items.length).toString());
+    // return lower_items;
+  }
+}
 
 function getSpecificDateData(key,cursor,cacheClient,result){
   return new Promise((resolve, reject) => {

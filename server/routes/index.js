@@ -68,6 +68,12 @@ router.post('/getScheduleData', wrap(async(req, res) => {
   });
 }));
 
+router.post('/test', (req, res) => {
+  let name = req.body.name;
+  let date = req.body.date;
+  console.log(name, date);
+  FUNC.getHsmoaDoc(date.toString(), name, res);
+})
 
 
 
