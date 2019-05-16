@@ -454,6 +454,7 @@ Main Components
   line-height: 1.4;
   height: 100%;
   overflow: hidden;
+  overflow: scroll;
 }
 
 .cd-schedule .event-modal .event-info > div {
@@ -602,7 +603,7 @@ Main Components
     display: block;
   }
   .cd-schedule .event-modal .close, .cd-schedule .event-modal .event-info {
-    opacity: 0;
+    /* opacity: 0; */
   }
   .cd-schedule .event-modal .close {
     width: 40px;

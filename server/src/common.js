@@ -78,41 +78,54 @@ module.exports = (() => {
       })
     },
 
-    getHsmoaDoc : (date, name, res) => {
-      let url = `http://hsmoa.com/?date=${date}&site=&cate=`;
+    getHsmoaDoc : (date, name) => {
+      return new Promise((resolve, reject) => {
+        let url = `http://hsmoa.com/?date=${date}&site=&cate=`;
 
-      request({
-        url : url,
-        method : 'GET',
-        json : true,
-        encoding : null
-      },(error, response, data) => {
-        if(error){
-          console.error(error);
-
-        }else if(response.statusCode === 200){
-          getLowerItem(name, data, res);
-        }else{
-          console.log(response.statusCode);
-
-        }
+        request({
+          url : url,
+          method : 'GET',
+          json : true,
+          encoding : null
+        },(error, response, data) => {
+          if(error){
+            console.error(error);
+            reject(Error('something is wrong -> getHsmoaDoc'));
+          }else if(response.statusCode === 200){
+            let result = getLowerItem(name, data);
+            resolve(result);
+          }else{
+            console.log(response.statusCode);
+            reject(Error('wrong status code...'));
+          }
+        })
       })
     }
   }
 })();
 
-function getLowerItem(name, data, res){
+function getLowerItem(name, data){
   let $ = cheerio.load(data);
   let target = $(`.font-15:contains(${name})`).parent().parent().parent().parent().children('.sametime-block');
   let lower_items = $(target).find('.sametime-item');
   if(lower_items.length <= 0){
-    // return "하위 구성 없음";
-    console.log('하위 구성 없음');
-    res.send('하위 구성 없음');
+    return "하위 구성 없음"
   }else{
-    console.log(lower_items.length);
-    res.send((lower_items.length).toString());
-    // return lower_items;
+    let items = [];
+    let length = lower_items.length;
+    for(let i = 0; i < length; i ++){
+      let t = $(lower_items)[i]
+      let img = $(t).find('img').data('src');
+      let name = $(t).find('.font-13').text();
+      let price = $(t).find('.font-14').text();
+      let obj = {
+        img : img,
+        name : name,
+        price : price
+      }
+      items.push(obj);
+    }
+    return items;
   }
 }
 

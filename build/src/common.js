@@ -124,39 +124,59 @@ module.exports = function () {
         });
       });
     },
-    getHsmoaDoc: function getHsmoaDoc(date, name, res) {
-      var url = "http://hsmoa.com/?date=".concat(date, "&site=&cate=");
-      (0, _request.default)({
-        url: url,
-        method: 'GET',
-        json: true,
-        encoding: null
-      }, function (error, response, data) {
-        if (error) {
-          console.error(error);
-        } else if (response.statusCode === 200) {
-          getLowerItem(name, data, res);
-        } else {
-          console.log(response.statusCode);
-        }
+    getHsmoaDoc: function getHsmoaDoc(date, name) {
+      return new Promise(function (resolve, reject) {
+        var url = "http://hsmoa.com/?date=".concat(date, "&site=&cate=");
+        (0, _request.default)({
+          url: url,
+          method: 'GET',
+          json: true,
+          encoding: null
+        }, function (error, response, data) {
+          if (error) {
+            console.error(error);
+            reject(Error('something is wrong -> getHsmoaDoc'));
+          } else if (response.statusCode === 200) {
+            var result = getLowerItem(name, data);
+            resolve(result);
+          } else {
+            console.log(response.statusCode);
+            reject(Error('wrong status code...'));
+          }
+        });
       });
     }
   };
 }();
 
-function getLowerItem(name, data, res) {
+function getLowerItem(name, data) {
   var $ = _cheerio.default.load(data);
 
   var target = $(".font-15:contains(".concat(name, ")")).parent().parent().parent().parent().children('.sametime-block');
   var lower_items = $(target).find('.sametime-item');
 
   if (lower_items.length <= 0) {
-    // return "하위 구성 없음";
-    console.log('하위 구성 없음');
-    res.send('하위 구성 없음');
+    return "하위 구성 없음";
   } else {
-    console.log(lower_items.length);
-    res.send(lower_items.length.toString()); // return lower_items;
+    var items = [];
+    var length = lower_items.length;
+
+    for (var i = 0; i < length; i++) {
+      var t = $(lower_items)[i];
+      var img = $(t).find('img').data('src');
+
+      var _name = $(t).find('.font-13').text();
+
+      var price = $(t).find('.font-14').text();
+      var obj = {
+        img: img,
+        name: _name,
+        price: price
+      };
+      items.push(obj);
+    }
+
+    return items;
   }
 }
 

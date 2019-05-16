@@ -5,8 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 var _redis = _interopRequireDefault(require("redis"));
 
 module.exports = function () {
-  // let ip = '172.31.29.112';
-  var ip = '127.0.0.1';
+  var ip = '172.31.29.112'; // let ip = '127.0.0.1';
 
   var client = _redis.default.createClient(6379, ip);
 

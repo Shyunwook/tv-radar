@@ -12,6 +12,8 @@ var _express = _interopRequireDefault(require("express"));
 
 var _moment = _interopRequireDefault(require("moment"));
 
+var _mecabYa = _interopRequireDefault(require("mecab-ya"));
+
 var _database = _interopRequireDefault(require("../src/database.js"));
 
 var _common = _interopRequireDefault(require("../src/common.js"));
@@ -162,11 +164,41 @@ function () {
     return _ref2.apply(this, arguments);
   };
 }()));
-router.post('/test', function (req, res) {
-  var name = req.body.name;
-  var date = req.body.date;
-  console.log(name, date);
+router.post('/getLowerItem', wrap(
+/*#__PURE__*/
+function () {
+  var _ref3 = (0, _asyncToGenerator2.default)(
+  /*#__PURE__*/
+  _regenerator.default.mark(function _callee3(req, res) {
+    var name, date, result;
+    return _regenerator.default.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            name = req.body.name;
+            date = req.body.date;
+            _context3.next = 4;
+            return _common.default.getHsmoaDoc(date.toString(), name);
 
-  _common.default.getHsmoaDoc(date.toString(), name, res);
+          case 4:
+            result = _context3.sent;
+            res.send(result);
+
+          case 6:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3);
+  }));
+
+  return function (_x6, _x7) {
+    return _ref3.apply(this, arguments);
+  };
+}()));
+router.get('/mecab', function (req, res) {
+  _mecabYa.default.pos("[수퍼싱글 1+1] 벨기에 LATEXCO 라텍스 토퍼매트리스", function (err, result) {
+    console.log(result);
+  });
 });
 module.exports = router;

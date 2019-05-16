@@ -20,22 +20,6 @@ const SCHEDULE_ROUTE = 'schedule';
 let down_data = [];
 
 $(document).ready(() => {
-  $('.test').on('click',() => {
-    let name = $('.test_name').val();
-    let date = $('.test_date').val();
-    $.ajax({
-      url: "/test",
-      type: "POST",
-      data: {
-        name: name,
-        date: date
-      },
-      success: (data) => {
-        console.log(data);
-      }
-    })
-  })
-
   setHeaderBtn();
 
   $.fn.ploading.defaults = {

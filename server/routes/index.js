@@ -1,5 +1,6 @@
 import express from 'express';
 import moment from 'moment';
+import mecab from 'mecab-ya';
 import cacheClient from '../src/database.js';
 import FUNC from '../src/common.js';
 
@@ -68,13 +69,18 @@ router.post('/getScheduleData', wrap(async(req, res) => {
   });
 }));
 
-router.post('/test', (req, res) => {
+router.post('/getLowerItem', wrap(async(req, res) => {
   let name = req.body.name;
   let date = req.body.date;
-  console.log(name, date);
-  FUNC.getHsmoaDoc(date.toString(), name, res);
-})
+  let result = await FUNC.getHsmoaDoc(date.toString(), name);
+  res.send(result);
+}))
 
+router.get('/mecab',function(req, res){
+  mecab.pos("[수퍼싱글 1+1] 벨기에 LATEXCO 라텍스 토퍼매트리스",function(err, result){
+    console.log(result);
+  })
+});
 
 
 module.exports = router;
