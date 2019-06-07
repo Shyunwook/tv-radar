@@ -195,10 +195,10 @@ function () {
   return function (_x6, _x7) {
     return _ref3.apply(this, arguments);
   };
-}()));
-router.get('/mecab', function (req, res) {
-  _mecabYa.default.pos("[수퍼싱글 1+1] 벨기에 LATEXCO 라텍스 토퍼매트리스", function (err, result) {
-    console.log(result);
-  });
-});
+}())); // router.get('/mecab',function(req, res){
+//   mecab.pos("[수퍼싱글 1+1] 벨기에 LATEXCO 라텍스 토퍼매트리스",function(err, result){
+//     console.log(result);
+//   })
+// });
+
 module.exports = router;

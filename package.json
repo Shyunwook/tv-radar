@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "clean": "rm -rf build public/js/bundle.js",
-    "start": "node ./build/bin/www.js",
+    "start_dev": "NODE_ENV=dev node ./build/bin/www.js",
+    "start": "NODE_ENV=production node ./build/bin/www.js",
     "build": "babel server --out-dir build --copy-files && ./node_modules/.bin/webpack"
   },
   "dependencies": {

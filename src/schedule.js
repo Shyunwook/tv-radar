@@ -143,10 +143,10 @@ export default function schedule() {
 
 			//detect click on the event and open the modal
 			$(this).on('click', 'a', function (event) {
-				console.log($(this).data('link'));
-				window.open($(this).data('link'));
-				// if (!self.animating) self.openModal($(this));
-				event.preventDefault();
+				// console.log($(this).data('link'));
+				// window.open($(this).data('link'));
+				if (!self.animating) self.openModal($(this));
+				// event.preventDefault();
 			});
 		});
 
@@ -473,6 +473,7 @@ export default function schedule() {
 			data: JSON.stringify({ dateFrom: dateFrom, dateTo: dateTo }),
 			contentType: 'application/json',
 			success: function (data) {
+				console.log(data);
 				target_shop = JSON.parse(JSON.stringify(DEFAULT_SHOP));
 
 				$('.cd-schedule').show();
@@ -570,6 +571,7 @@ export default function schedule() {
 					<em class="price_text">${item.price.length < 3 || item.price.length === undefined ? '' : item.price}</em>
 					<em class="event-price" style="display:none">${item.price}</em>
 					<em class="event-shop" style="display:none">${item.shop}</em>
+					<span>${(item.lower===undefined||item.lower.length <= 0)?"" : "**있음**"}</span>
 					</a>
 					</li>`;
 					content += li;

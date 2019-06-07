@@ -171,13 +171,15 @@ function periodValidator(start, end, tag) {
   let future_flag = moment(end).diff(moment(), 'times');
   let today_flag = moment(end).diff(moment(), 'days');
 
-  console.log(future_flag);
-  if (diff > 31) {
+  if(end === undefined){
+    alert('기간을 선택해주세요!!');
+    $('.datepicker-here').val("");
+    flag = false;
+  }else if (diff > 31) {
     alert('최대 한 달까지만 조회가 가능합니다😭😭(업데이트 예정)');
     $('.datepicker-here').val("");
     flag = false;
   } else if (future_flag > 0 || (end && today_flag === 0)) {
-    console.log(future_flag);
     alert('전 일까지의 데이터만 조회가 가능합니다')
     $('.datepicker-here').val("");
     flag = false;

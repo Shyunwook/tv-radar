@@ -1,9 +1,14 @@
 import redis from 'redis';
 
 module.exports = (() => {
-  let ip = '172.31.29.112';
-  // let ip = '127.0.0.1';
-
+  let ip = '';
+  if(process.env.NODE_ENV != "dev"){
+    ip = '172.31.29.112';
+  }else{
+    ip = '127.0.0.1';
+  }
+  console.log(ip);
+  
   let client = redis.createClient(6379,ip);
 
   client.on('connect', () => {
