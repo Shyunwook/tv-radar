@@ -907,6 +907,7 @@ table.v-table thead th:not(:first-child){
   border-radius: 50%;
   margin-top: 17px;
   margin-bottom: 32px;
+  margin-left: 0px;
 }
 
 .target_area .arrow_link .material-icons, .schedule_area .arrow_link .material-icons{
