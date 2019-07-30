@@ -13,6 +13,7 @@
     "@babel/runtime": "^7.3.4",
     "@eliasnystrom/bootstrap-multiselect": "^1.0.0",
     "air-datepicker-en": "^2.2.5",
+    "aws-sdk": "^2.502.0",
     "body-parser": "^1.18.3",
     "bootstrap": "^4.3.1",
     "busy-load": "^0.1.2",

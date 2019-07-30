@@ -2,22 +2,25 @@
 <html>
 
 <head>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-91675162-15"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
 
     gtag('config', 'UA-91675162-15');
   </script>
   <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-TGT3S93');</script>
-<!-- End Google Tag Manager -->
+  <script>(function (w, d, s, l, i) {
+    w[l] = w[l] || []; w[l].push({
+      'gtm.start':
+        new Date().getTime(), event: 'gtm.js'
+    }); var f = d.getElementsByTagName(s)[0],
+      j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-TGT3S93');</script>
+  <!-- End Google Tag Manager -->
 
   <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
@@ -26,9 +29,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <body>
   <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TGT3S93"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TGT3S93" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
   <% include ./header.ejs %>
   <div id="app" class="target_content">
     <rank-component></rank-component>
@@ -41,15 +44,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <v-layout class="filter_area row" wrap>
           <p class="target_title">경쟁사의 주력상품을 보고 타겟소싱의 클루를 찾아 현장에 적용해보아요!</p>
           <div class="col-md-5 date_filter">
-            <div class="circle_number">1</div><p class="filter_name">조회 기준 기간 선택</p>
-            <input placeholder="시작일 ~ 종료일" data-range="true" data-multiple-dates-separator=" ~ " data-language="en" class="datepicker-here date_picker" data-date-format="yyyy-mm-dd">
+            <div class="circle_number">1</div>
+            <p class="filter_name">조회 기준 기간 선택</p>
+            <input placeholder="시작일 ~ 종료일" data-range="true" data-multiple-dates-separator=" ~ " data-language="en"
+              class="datepicker-here date_picker" data-date-format="yyyy-mm-dd">
             <button class="btn_search" id="search" @click=getData()>조회</button>
           </div>
           <div class="col-md-7 cate_shop_filter">
             <div class="right_align">
-              <div class="circle_number">2</div><p class="filter_name">카테고리 & 경쟁사 선택</p>
-              <v-select flat hide-details append-icon='$vuetify.icons.expand' small multiple clearable :items="columnValueList('shop')" v-model="filters['shop']" placeholder="경쟁사 필터" class="target_shop_select" @change="selectText"></v-select>
-              <v-select flat hide-details append-icon='$vuetify.icons.expand' small clearable :items="columnValueList('category')" v-model="filters['category']" placeholder="카테고리 필터" class="target_cate_select" @change="gsDataHandler('select')"></v-select>
+              <div class="circle_number">2</div>
+              <p class="filter_name">카테고리 & 경쟁사 선택</p>
+              <v-select flat hide-details append-icon='$vuetify.icons.expand' small multiple clearable
+                :items="columnValueList('shop')" v-model="filters['shop']" placeholder="경쟁사 필터"
+                class="target_shop_select" @change="selectText"></v-select>
+              <v-select flat hide-details append-icon='$vuetify.icons.expand' small clearable
+                :items="columnValueList('category')" v-model="filters['category']" placeholder="카테고리 필터"
+                class="target_cate_select" @change="gsDataHandler('select')"></v-select>
             </div>
           </div>
         </v-layout>
@@ -57,7 +67,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <v-layout class="func_area">
           <p class="selected_period" data-date="">기간을 선택해 주세요</p>
           <v-layout class="right_content">
-            <button id="excel_download" class="tareget_excel" v-if="download"  @click="excelDownload">엑셀 다운로드</button>
+            <button id="excel_download" class="tareget_excel" v-if="download" @click="excelDownload">엑셀 다운로드</button>
           </v-layout>
           </div>
         </v-layout>
@@ -67,7 +77,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <v-data-table :headers="headers" :items="filteredRankItem" :pagination.sync="pagination">
               <template slot="headers" slot-scope="props">
                 <tr>
-                  <th v-for="header in props.headers" :key="header.text" :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']" @click="changeSort(header.value)">
+                  <th v-for="header in props.headers" :key="header.text"
+                    :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
+                    @click="changeSort(header.value)">
                     <v-icon small>arrow_upward</v-icon>
                     {{ header.text }}
                   </th>
@@ -123,7 +135,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="gs_table_box" id="scroll-target" v-scroll:#scroll-target="onScroll">
               <table class="table gs_table">
                 <thead>
-                  <div class="gs_title" data-placement="bottom" title="" data-toggle="tooltip" data-original-title="선택한 조건이 적용된 GS SHOP의 데이터">
+                  <div class="gs_title" data-placement="bottom" title="" data-toggle="tooltip"
+                    data-original-title="선택한 조건이 적용된 GS SHOP의 데이터">
                     <h6 class="tb_title_zoey">GS SHOP</h6>
                   </div>
                 </thead>
@@ -134,12 +147,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <td class="">사용분</td>
                     <td class="">가중분</td>
                   </tr>
-                  <tr v-if="gs_view_data.length<=0">
+                  <tr v-if="gs_view_data.length <= 0">
                     <td colspan="4">
                       No data available
                     </td>
                   </tr>
-                  <tr v-for="(data,index) in gs_view_data" :data-category=data.category :data-brand=data.brand :data-shop=data.shop>
+                  <tr v-for="(data,index) in gs_view_data" :data-category=data.category :data-brand=data.brand
+                    :data-shop=data.shop>
                     <td class=""><span class="replacement"></span></td>
                     <td><img :src=data.img width="100%" height="auto" /></td>
                     <td class="">{{data.real_min}}분</td>

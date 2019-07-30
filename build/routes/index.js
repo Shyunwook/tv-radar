@@ -18,6 +18,14 @@ var _database = _interopRequireDefault(require("../src/database.js"));
 
 var _common = _interopRequireDefault(require("../src/common.js"));
 
+var _awsSdk = _interopRequireDefault(require("aws-sdk"));
+
+_awsSdk.default.config.update({
+  region: "ap-northeast-2"
+});
+
+var dynamodb = new _awsSdk.default.DynamoDB();
+
 var router = _express.default.Router();
 
 var wrap = function wrap(asyncFn) {
@@ -195,7 +203,33 @@ function () {
   return function (_x6, _x7) {
     return _ref3.apply(this, arguments);
   };
-}())); // router.get('/mecab',function(req, res){
+}()));
+router.get('/db', function (req, res) {
+  var params = {
+    TableName: "CrawlHsmoaSchedule",
+    KeyConditionExpression: "#d = :d",
+    FilterExpression: "crawl_turn = :t",
+    ExpressionAttributeNames: {
+      "#d": "date"
+    },
+    ExpressionAttributeValues: {
+      ":d": {
+        "S": "2019-07-26"
+      },
+      ":t": {
+        "S": "23"
+      }
+    }
+  };
+  dynamodb.query(params, function (err, data) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(data);
+      res.send(data.Items);
+    }
+  });
+}); // router.get('/mecab',function(req, res){
 //   mecab.pos("[수퍼싱글 1+1] 벨기에 LATEXCO 라텍스 토퍼매트리스",function(err, result){
 //     console.log(result);
 //   })

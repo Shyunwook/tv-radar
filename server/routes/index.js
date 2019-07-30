@@ -3,6 +3,12 @@ import moment from 'moment';
 import mecab from 'mecab-ya';
 import cacheClient from '../src/database.js';
 import FUNC from '../src/common.js';
+import AWS from 'aws-sdk';
+AWS.config.update({
+  region: "ap-northeast-2"
+});
+
+let dynamodb = new AWS.DynamoDB();
 
 let router = express.Router();
 
@@ -75,6 +81,32 @@ router.post('/getLowerItem', wrap(async(req, res) => {
   let result = await FUNC.getHsmoaDoc(date.toString(), name);
   res.send(result);
 }))
+
+router.get('/db', (req, res) => {
+  var params = {
+    TableName : "CrawlHsmoaSchedule",
+    KeyConditionExpression : "#d = :d",
+    FilterExpression: "crawl_turn = :t",
+    ExpressionAttributeNames : { 
+        "#d" : "date",
+    },
+    ExpressionAttributeValues: {
+        ":d" : {"S" : "2019-07-26"},
+        ":t" : {"S" : "23"}
+    }
+  }
+
+
+  dynamodb.query(params, function(err, data){
+    if(err){
+      console.log(err);
+    }else{
+      console.log(data);
+      res.send(data.Items);
+    }
+  });
+  
+});
 
 // router.get('/mecab',function(req, res){
 //   mecab.pos("[수퍼싱글 1+1] 벨기에 LATEXCO 라텍스 토퍼매트리스",function(err, result){
