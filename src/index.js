@@ -177,13 +177,14 @@ function periodValidator(start, end, tag) {
     flag = false;
   }else if (diff > 31) {
     alert('최대 한 달까지만 조회가 가능합니다😭😭(업데이트 예정)');
-    $('.datepicker-here').val("");
-    flag = false;
+    // $('.datepicker-here').val("");
+    flag = true;
   } else if (future_flag > 0 || (end && today_flag === 0)) {
     alert('전 일까지의 데이터만 조회가 가능합니다')
     $('.datepicker-here').val("");
     flag = false;
   }
+  
   if (tag == 'click') {
     return flag;
   }
@@ -331,7 +332,7 @@ let allRank = Vue.component('rank-component', {
 
       if (flag == true) {
         $.ajax({
-          url: "/getScheduleData",
+          url: "/getTargeteData",
           type: "POST",
           dataType: "json",
           data: {

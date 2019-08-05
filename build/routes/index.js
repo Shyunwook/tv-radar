@@ -20,11 +20,14 @@ var _common = _interopRequireDefault(require("../src/common.js"));
 
 var _awsSdk = _interopRequireDefault(require("aws-sdk"));
 
+var _converter = _interopRequireDefault(require("aws-sdk/lib/dynamodb/converter.js"));
+
 _awsSdk.default.config.update({
   region: "ap-northeast-2"
 });
 
 var dynamodb = new _awsSdk.default.DynamoDB();
+var docClient = new _awsSdk.default.DynamoDB.DocumentClient();
 
 var router = _express.default.Router();
 
@@ -82,117 +85,100 @@ router.get('/target', function (req, res, next) {
 router.get('/schedule', function (req, res, next) {
   res.render('schedule.ejs');
 });
-router.post('/getScheduleData', wrap(
+router.post('/getScheduleData',
 /*#__PURE__*/
 function () {
   var _ref2 = (0, _asyncToGenerator2.default)(
   /*#__PURE__*/
-  _regenerator.default.mark(function _callee2(req, res) {
-    var period, raw, initial_day, redis_data_flag, redis_period, dynamo_period, redis_raw, dynamo_raw;
-    return _regenerator.default.wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            period = {
-              dateFrom: req.body.dateFrom,
-              dateTo: req.body.dateTo
-            };
-            raw = {};
-            initial_day = "";
-            _context2.next = 5;
-            return function () {
-              return new Promise(function (resolve, reject) {
-                _database.default.sort("dateList", "alpha", function (err, result) {
-                  initial_day = result[0];
-
-                  if (result.indexOf(period.dateFrom) > 0) {
-                    resolve(true);
-                  } else {
-                    resolve(false);
-                  }
-                });
-              });
-            }();
-
-          case 5:
-            redis_data_flag = _context2.sent;
-
-            if (!redis_data_flag) {
-              _context2.next = 13;
-              break;
-            }
-
-            _context2.next = 9;
-            return _common.default.getRedisData(period, _database.default);
-
-          case 9:
-            raw = _context2.sent;
-            console.log("Redis only!!");
-            _context2.next = 23;
-            break;
-
-          case 13:
-            redis_period = {
-              dateFrom: initial_day,
-              dateTo: req.body.dateTo
-            };
-            dynamo_period = {
-              dateFrom: req.body.dateFrom,
-              dateTo: (0, _moment.default)(initial_day).add(-1, 'days').format("YYYY-MM-DD")
-            };
-            _context2.next = 17;
-            return _common.default.getRedisData(period, _database.default);
-
-          case 17:
-            redis_raw = _context2.sent;
-            _context2.next = 20;
-            return _common.default.getDynamoData(dynamo_period);
-
-          case 20:
-            dynamo_raw = _context2.sent;
-            raw = [].concat((0, _toConsumableArray2.default)(redis_raw), (0, _toConsumableArray2.default)(dynamo_raw));
-            console.log("DynamoDB + Redis!!");
-
-          case 23:
-            _common.default.setScheduleData(period, raw).then(function (result) {
-              res.send(result);
-            }).catch(function (error) {
-              console.log(error);
-            });
-
-          case 24:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2);
-  }));
-
-  return function (_x4, _x5) {
-    return _ref2.apply(this, arguments);
-  };
-}()));
-router.post('/getLowerItem', wrap(
-/*#__PURE__*/
-function () {
-  var _ref3 = (0, _asyncToGenerator2.default)(
-  /*#__PURE__*/
   _regenerator.default.mark(function _callee3(req, res) {
-    var name, date, result;
+    var items, start_date, promise, i, func;
     return _regenerator.default.wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            name = req.body.name;
-            date = req.body.date;
-            _context3.next = 4;
-            return _common.default.getHsmoaDoc(date.toString(), name);
+            items = [];
+            start_date = (0, _moment.default)(req.body.dateFrom, 'YYYY-MM-DD').format('YYYY-MM-DD');
+            promise = [];
 
-          case 4:
-            result = _context3.sent;
-            res.send(result);
+            for (i = 0; i < 7; i++) {
+              func = function (date) {
+                return new Promise(
+                /*#__PURE__*/
+                function () {
+                  var _ref3 = (0, _asyncToGenerator2.default)(
+                  /*#__PURE__*/
+                  _regenerator.default.mark(function _callee2(resolve, reject) {
+                    var turn, diff, params;
+                    return _regenerator.default.wrap(function _callee2$(_context2) {
+                      while (1) {
+                        switch (_context2.prev = _context2.next) {
+                          case 0:
+                            diff = (0, _moment.default)().diff((0, _moment.default)(date), 'days');
+
+                            if (diff > 0) {
+                              turn = "23";
+                            } else {
+                              turn = (0, _moment.default)().add(-2, 'hours').format('HH');
+                            }
+
+                            console.log('날짜 : ', date);
+                            console.log('crawl_turn : ', turn);
+                            console.log('-----------------');
+                            params = {
+                              TableName: "CrawlHsmoaSchedule",
+                              IndexName: "date-crawl_turn-index",
+                              KeyConditionExpression: "#d = :d and crawl_turn = :t",
+                              ExpressionAttributeNames: {
+                                "#d": "date"
+                              },
+                              ExpressionAttributeValues: {
+                                ":d": {
+                                  "S": date
+                                },
+                                ":t": {
+                                  "S": turn
+                                }
+                              }
+                            };
+                            dynamodb.query(params, function (err, data) {
+                              if (err) {
+                                console.log('에러', err);
+                                reject();
+                              } else {
+                                console.log(date + '----- 성공!!');
+                                console.log(data.Items.length);
+                                var item = data.Items.map(function (item) {
+                                  return _awsSdk.default.DynamoDB.Converter.unmarshall(item);
+                                });
+                                items = [].concat((0, _toConsumableArray2.default)(items), (0, _toConsumableArray2.default)(item));
+                                resolve();
+                              }
+                            });
+
+                          case 7:
+                          case "end":
+                            return _context2.stop();
+                        }
+                      }
+                    }, _callee2);
+                  }));
+
+                  return function (_x6, _x7) {
+                    return _ref3.apply(this, arguments);
+                  };
+                }());
+              }((0, _moment.default)(start_date, 'YYYY-MM-DD').add(i, 'days').format('YYYY-MM-DD'));
+
+              promise.push(func);
+            }
+
+            _context3.next = 6;
+            return Promise.all(promise);
 
           case 6:
+            res.send(items);
+
+          case 7:
           case "end":
             return _context3.stop();
         }
@@ -200,31 +186,107 @@ function () {
     }, _callee3);
   }));
 
-  return function (_x6, _x7) {
-    return _ref3.apply(this, arguments);
+  return function (_x4, _x5) {
+    return _ref2.apply(this, arguments);
   };
-}())); // router.get('/db', (req, res) => {
-//   var params = {
-//     TableName : "CrawlHsmoaSchedule",
-//     KeyConditionExpression : "#d = :d",
-//     FilterExpression: "crawl_turn = :t",
-//     ExpressionAttributeNames : { 
-//         "#d" : "date",
-//     },
-//     ExpressionAttributeValues: {
-//         ":d" : {"S" : "2019-07-26"},
-//         ":t" : {"S" : "23"}
-//     }
-//   }
-//   dynamodb.query(params, function(err, data){
-//     if(err){
-//       console.log(err);
-//     }else{
-//       console.log(data);
-//       res.send(data.Items);
-//     }
-//   });
-// });
+}());
+router.post('/getTargeteData',
+/*#__PURE__*/
+function () {
+  var _ref4 = (0, _asyncToGenerator2.default)(
+  /*#__PURE__*/
+  _regenerator.default.mark(function _callee4(req, res) {
+    var period, items, start_date, promise, diff, i, func;
+    return _regenerator.default.wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            period = {
+              dateFrom: req.body.dateFrom,
+              dateTo: req.body.dateTo
+            };
+            items = [];
+            start_date = (0, _moment.default)('2019-04-01', 'YYYY-MM-DD').format('YYYY-MM-DD');
+            promise = [];
+            diff = (0, _moment.default)(period.dateTo, 'YYYY-MM-DD').diff((0, _moment.default)(period.dateFrom, 'YYYY-MM-DD'), 'days');
+
+            for (i = 0; i <= diff; i++) {
+              func = function (date) {
+                return new Promise(function (resolve, reject) {
+                  // let params = {
+                  //   TableName : "CrawlHsmoaSchedule",
+                  //   KeyConditionExpression : "#d = :d",
+                  //   FilterExpression: "crawl_turn = :t",
+                  //   ExpressionAttributeNames : { 
+                  //       "#d" : "date",
+                  //   },
+                  //   ExpressionAttributeValues: {
+                  //       ":d" : {"S" : date},
+                  //       ":t" : {"S" : "23"}
+                  //   }
+                  // }
+                  var params = {
+                    TableName: "CrawlHsmoaSchedule",
+                    IndexName: "date-crawl_turn-index",
+                    KeyConditionExpression: "#d = :d and crawl_turn = :t",
+                    ExpressionAttributeNames: {
+                      "#d": "date"
+                    },
+                    ExpressionAttributeValues: {
+                      ":d": {
+                        "S": date
+                      },
+                      ":t": {
+                        "S": "23"
+                      }
+                    }
+                  };
+                  dynamodb.query(params, function (err, data) {
+                    if (err) {
+                      console.log(err);
+                      reject();
+                    } else {
+                      console.log(date + '----- 성공!!');
+                      var item = data.Items.map(function (item) {
+                        return _awsSdk.default.DynamoDB.Converter.unmarshall(item);
+                      });
+                      items = [].concat((0, _toConsumableArray2.default)(items), (0, _toConsumableArray2.default)(item));
+                      resolve();
+                    }
+                  });
+                });
+              }((0, _moment.default)(period.dateFrom, 'YYYY-MM-DD').add(i, 'days').format('YYYY-MM-DD'));
+
+              promise.push(func);
+            }
+
+            _context4.next = 8;
+            return Promise.all(promise);
+
+          case 8:
+            _common.default.setScheduleData(period, items).then(function (result) {
+              res.send(result);
+            }).catch(function (error) {
+              console.log(error);
+            });
+
+          case 9:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4);
+  }));
+
+  return function (_x8, _x9) {
+    return _ref4.apply(this, arguments);
+  };
+}()); // router.post('/getLowerItem', wrap(async(req, res) => {
+//   let name = req.body.name;
+//   let date = req.body.date;
+//   let result = await FUNC.getHsmoaDoc(date.toString(), name);
+//   res.send(result);
+// }))
 // router.get('/mecab',function(req, res){
 //   mecab.pos("[수퍼싱글 1+1] 벨기에 LATEXCO 라텍스 토퍼매트리스",function(err, result){
 //     console.log(result);

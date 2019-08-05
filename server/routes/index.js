@@ -4,11 +4,14 @@ import mecab from 'mecab-ya';
 import cacheClient from '../src/database.js';
 import FUNC from '../src/common.js';
 import AWS from 'aws-sdk';
+import converter from 'aws-sdk/lib/dynamodb/converter.js';
+
 AWS.config.update({
   region: "ap-northeast-2"
 });
 
 let dynamodb = new AWS.DynamoDB();
+const docClient = new AWS.DynamoDB.DocumentClient();
 
 let router = express.Router();
 
@@ -36,77 +39,136 @@ router.get('/schedule', function(req, res, next) {
   res.render('schedule.ejs');
 });
 
-router.post('/getScheduleData', wrap(async(req, res) => {
-  let period = {dateFrom : req.body.dateFrom, dateTo : req.body.dateTo};
-  let raw = {};
-  let initial_day = "";
 
-  let redis_data_flag = await (() => {
-    return new Promise((resolve, reject) => {
-      cacheClient.sort("dateList","alpha",(err,result) => {
-        initial_day = result[0];
-        if(result.indexOf(period.dateFrom) > 0){
-          resolve(true);
+router.post('/getScheduleData', async (req, res) => {
+  let items = [];
+  let start_date = moment(req.body.dateFrom,'YYYY-MM-DD').format('YYYY-MM-DD');
+  let promise = [];
+
+  for(let i = 0; i < 7; i ++ ){
+
+    let func = (function(date){
+      return new Promise(async (resolve, reject) => {
+        let turn;
+        let diff = moment().diff(moment(date), 'days');
+
+        if(diff > 0){
+          turn = "23";
         }else{
-          resolve(false);
+          turn = moment().add(-2, 'hours').format('HH');
         }
-      })
-    })
-  })();
+        console.log('날짜 : ', date);
+        console.log('crawl_turn : ', turn);
+        console.log('-----------------');
 
-  if(redis_data_flag){
-    raw = await FUNC.getRedisData(period,cacheClient);
-    console.log("Redis only!!");
-  }else{
-    let redis_period = { dateFrom : initial_day, dateTo : req.body.dateTo };
-    let dynamo_period = { dateFrom : req.body.dateFrom, dateTo : moment(initial_day).add(-1,'days').format("YYYY-MM-DD")};
+        let params = {
+          TableName : "CrawlHsmoaSchedule",
+          IndexName: "date-crawl_turn-index",
+          KeyConditionExpression : "#d = :d and crawl_turn = :t",
+          ExpressionAttributeNames : { 
+              "#d" : "date",
+          },
+          ExpressionAttributeValues: {
+              ":d" : {"S" : date},
+              ":t" : {"S" : turn}
+          }
+        }
+        
+        dynamodb.query(params, function(err, data){
+          if(err){
+            console.log('에러',err);
+            reject();
+          }else{
+            console.log(date + '----- 성공!!');
+            console.log(data.Items.length);
+            let item = data.Items.map((item) => {
+              return AWS.DynamoDB.Converter.unmarshall(item)
+            })
+            items = [...items, ...item];
+            resolve();
+          }
+        });
+      });
+    })(moment(start_date, 'YYYY-MM-DD').add(i, 'days').format('YYYY-MM-DD'));
 
-    let redis_raw = await FUNC.getRedisData(period,cacheClient);
-    let dynamo_raw = await FUNC.getDynamoData(dynamo_period);
-
-    raw = [...redis_raw, ...dynamo_raw];
-    console.log("DynamoDB + Redis!!");
+    promise.push(func);
   }
 
-  FUNC.setScheduleData(period,raw).then((result) => {
+  await Promise.all(promise);
+  res.send(items);
+})
+
+router.post('/getTargeteData', async (req, res) => {
+  let period = {dateFrom : req.body.dateFrom, dateTo : req.body.dateTo};
+  let items = [];
+  let start_date = moment('2019-04-01','YYYY-MM-DD').format('YYYY-MM-DD');
+  let promise = [];
+  let diff = moment(period.dateTo, 'YYYY-MM-DD').diff(moment(period.dateFrom, 'YYYY-MM-DD'), 'days');
+
+  for(let i = 0; i <= diff; i ++ ){
+
+    let func = (function(date){
+      return new Promise((resolve, reject) => {
+        // let params = {
+        //   TableName : "CrawlHsmoaSchedule",
+        //   KeyConditionExpression : "#d = :d",
+        //   FilterExpression: "crawl_turn = :t",
+        //   ExpressionAttributeNames : { 
+        //       "#d" : "date",
+        //   },
+        //   ExpressionAttributeValues: {
+        //       ":d" : {"S" : date},
+        //       ":t" : {"S" : "23"}
+        //   }
+        // }
+        let params = {
+          TableName : "CrawlHsmoaSchedule",
+          IndexName: "date-crawl_turn-index",
+          KeyConditionExpression : "#d = :d and crawl_turn = :t",
+          ExpressionAttributeNames : {
+              "#d" : "date",
+          },
+          ExpressionAttributeValues: {
+              ":d" : {"S" : date},
+              ":t" : {"S" : "23"}
+          }
+        }
+      
+        dynamodb.query(params, function(err, data){
+          if(err){
+            console.log(err);
+            reject();
+          }else{
+            console.log(date + '----- 성공!!');
+            let item = data.Items.map((item) => {
+              return AWS.DynamoDB.Converter.unmarshall(item)
+            })
+            items = [...items, ...item];
+            resolve();
+          }
+        });
+      });
+    })(moment(period.dateFrom, 'YYYY-MM-DD').add(i, 'days').format('YYYY-MM-DD'));
+
+    promise.push(func);
+  }
+
+  await Promise.all(promise);
+
+  FUNC.setScheduleData(period,items).then((result) => {
     res.send(result);
   }).catch((error) => {
     console.log(error);
   });
-}));
+});
 
-router.post('/getLowerItem', wrap(async(req, res) => {
-  let name = req.body.name;
-  let date = req.body.date;
-  let result = await FUNC.getHsmoaDoc(date.toString(), name);
-  res.send(result);
-}))
+// router.post('/getLowerItem', wrap(async(req, res) => {
+//   let name = req.body.name;
+//   let date = req.body.date;
+//   let result = await FUNC.getHsmoaDoc(date.toString(), name);
+//   res.send(result);
+// }))
 
-// router.get('/db', (req, res) => {
-//   var params = {
-//     TableName : "CrawlHsmoaSchedule",
-//     KeyConditionExpression : "#d = :d",
-//     FilterExpression: "crawl_turn = :t",
-//     ExpressionAttributeNames : { 
-//         "#d" : "date",
-//     },
-//     ExpressionAttributeValues: {
-//         ":d" : {"S" : "2019-07-26"},
-//         ":t" : {"S" : "23"}
-//     }
-//   }
-
-
-//   dynamodb.query(params, function(err, data){
-//     if(err){
-//       console.log(err);
-//     }else{
-//       console.log(data);
-//       res.send(data.Items);
-//     }
-//   });
-  
-// });
 
 // router.get('/mecab',function(req, res){
 //   mecab.pos("[수퍼싱글 1+1] 벨기에 LATEXCO 라텍스 토퍼매트리스",function(err, result){

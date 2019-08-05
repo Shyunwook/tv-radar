@@ -468,7 +468,8 @@ export default function schedule() {
 		let dateTo = moment(end).format("YYYY-MM-DD");
 
 		$.ajax({
-			url: "https://fy2b0csnq7.execute-api.us-west-2.amazonaws.com/prod/vaccine-c-api",
+			// url: "https://fy2b0csnq7.execute-api.us-west-2.amazonaws.com/prod/vaccine-c-api",
+			url : '/getScheduleData',
 			type: 'POST',
 			data: JSON.stringify({ dateFrom: dateFrom, dateTo: dateTo }),
 			contentType: 'application/json',
@@ -480,40 +481,28 @@ export default function schedule() {
 				raw_data = JSON.parse(JSON.stringify(data));
 
 				let filtered = shopCategoryFilter(raw_data);
+				console.log(filtered);
 				drawSchedule(filtered, dateFrom, dateTo);
 				$('.schedule_excel').show();
 				$('.schedule_category').show();
 				$('.schedule_shop').show();
 				$('.schedule_datepicker').val("");
-				filterActivate();
+
+				//filter Activation
+				$('.category_select').prop('disabled', false);
+				$('.shop_select').prop('disabled', false);
+				$('.schedule_shop button').prop('disabled', false);
+				$('.schedule_shop button').removeClass('disabled');
+
+				$('.category_select option[value="all"]').prop('selected', true);
+
+				$('body').ploading({
+					action: 'hide'
+				});
 			},
 			error: function (e) {
 				console.log(e);
 			}
-		});
-	}
-
-	function filterActivate() {
-		$('.category_select').prop('disabled', false);
-		$('.shop_select').prop('disabled', false);
-		$('.schedule_shop button').prop('disabled', false);
-		$('.schedule_shop button').removeClass('disabled');
-
-		$('.category_select option[value="all"]').prop('selected', true);
-		let leng = $('.multiselect-container').children().length;
-
-		for (let i = 0; i < leng; i++) {
-			let target = $('.multiselect-container').children()[i];
-			if (DEFAULT_SHOP.indexOf($(target).find('input').val()) > -1 && !$(target).hasClass('active')) {
-				$(target).find('label').trigger('click');
-			} else if (DEFAULT_SHOP.indexOf($(target).find('input').val()) === -1 && $(target).hasClass('active')) {
-				$(target).find('label').trigger('click');
-			}
-		}
-
-		target_shop = JSON.parse(JSON.stringify(DEFAULT_SHOP));
-		$('body').ploading({
-			action: 'hide'
 		});
 	}
 
@@ -528,6 +517,9 @@ export default function schedule() {
 	function classifyScheduleData(data, schedule) {
 		data.forEach((item) => {
 			let start_index = item.start_time.split(":")[0];
+			if(parseInt(start_index) < 10){
+				start_index = '0' + start_index;
+			}
 			schedule[item.date][start_index].push(item);
 		})
 	}
@@ -628,6 +620,7 @@ export default function schedule() {
 		period.forEach((date) => {
 			schedule[date] = JSON.parse(JSON.stringify(time_obj));
 		})
+		console.log(schedule);
 
 		classifyScheduleData(data, schedule);
 		setTimelineHeight(schedule);
