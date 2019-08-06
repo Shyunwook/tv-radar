@@ -191,7 +191,6 @@ function periodValidator(start, end, tag) {
 }
 
 function sortByWeightedMin(grouped_data) {
-  console.log(grouped_data);
   grouped_data.sort((a, b) => {
     return b.weighted_min - a.weighted_min;
   })

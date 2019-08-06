@@ -518,8 +518,9 @@ export default function schedule() {
 		data.forEach((item) => {
 			let start_index = item.start_time.split(":")[0];
 			if(parseInt(start_index) < 10){
-				start_index = '0' + start_index;
+				start_index = '0' + parseInt(start_index);
 			}
+			console.log(item);
 			schedule[item.date][start_index].push(item);
 		})
 	}
@@ -557,8 +558,8 @@ export default function schedule() {
 				schedule[date][time].forEach((item) => {
 					let li =
 						`<li class="single-event ${item.shop}" data-start="${item.start_time}" data-end="${item.end_time}"  data-content="${item.item}" data-event="event-3"
-					data-shop="${item.shop}">
-					<a href="#0" data-link="${item.link}">
+					data-shop="${item.shop}" data-lower='${item.lower}'>
+					<a data-link="${item.link}">
 					<em class="event-name"><img src="img/badge/${item.shop}.svg">${item.item}</em>
 					<em class="price_text">${item.price.length < 3 || item.price.length === undefined ? '' : item.price}</em>
 					<em class="event-price" style="display:none">${item.price}</em>
@@ -629,33 +630,47 @@ export default function schedule() {
 
 	function getLowerItem(self) {
 		let target = $('.cd-schedule').find('.selected-event');
-		let date = $(target).parent().parent().siblings('.top-info').data('date');
-		date = moment(date).format('YYYYMMDD');
-		let name = $(target).data('content');
-		$.ajax({
-			url: "/getLowerItem",
-			type: "POST",
-			data: {
-				name: name,
-				date: date
-			},
-			success: (data) => {
-				console.log(data);
-				console.log(typeof(data))
-				let content = "";
-				if(typeof(data)==="object"){
-					content = makeModalContent(data);
-				}
-				self.modalBody.find('.event-info').append(content);
-			}
-		})
+		let lower;
+		if(typeof $(target).data('lower') == 'object'){
+			lower = JSON.stringify($(target).data('lower'));
+			lower = `[${lower}]`;
+		}else{
+			lower =  `[${ $(target).data('lower') }]`;
+		}
+
+		lower = JSON.parse(lower);
+		let content = makeModalContent(lower);
+		self.modalBody.find('.event-info').append(content);
+		// let date = $(target).parent().parent().siblings('.top-info').data('date');
+		// date = moment(date).format('YYYYMMDD');
+		// let name = $(target).data('content');
+		// $.ajax({
+		// 	url: "/getLowerItem",
+		// 	type: "POST",
+		// 	data: {
+		// 		name: name,
+		// 		date: date
+		// 	},
+		// 	success: (data) => {
+		// 		console.log(data);
+		// 		console.log(typeof(data))
+		// 		let content = "";
+		// 		if(typeof(data)==="object"){
+		// 			content = makeModalContent(data);
+		// 		}
+		// 		self.modalBody.find('.event-info').append(content);
+		// 	}
+		// })
 	}
 
 	function makeModalContent(data){
+
 		let content = ``;
-		data.forEach(val => {
-			content += `<img src="${val.img}"><p>${val.name}</p><p>${val.price}</p>`;
-		})
+
+		for(let item of data){
+			content += `<img src="${item.img}"><p>${item.name}</p><p>${item.price}</p>`;
+		}
+
 		return content;
 	}
 
