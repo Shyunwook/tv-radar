@@ -40,7 +40,7 @@ module.exports = {
             jQuery: "jquery",
             Popper: ['popper.js', 'default'],
         }),
-        new webpack.SourceMapDevToolPlugin({}),
+        // new webpack.SourceMapDevToolPlugin({}),
         new VueLoaderPlugin()
     ],
 

@@ -20,7 +20,7 @@ var _morgan = _interopRequireDefault(require("morgan"));
 
 var _logger = _interopRequireDefault(require("./logger"));
 
-var morganFormat = process.env.NODE_ENV !== "production" ? "dev" : "combinded";
+// const morganFormat = process.env.NODE_ENV !== "production" ? "dev" : "combinded";
 var app = (0, _express.default)(); // view engine setup
 
 app.set('views', _path.default.join(__dirname, '../views'));
@@ -31,7 +31,7 @@ app.use(_express.default.urlencoded({
 }));
 app.use((0, _cookieParser.default)()); // app.use(morgan('dev'));
 
-app.use((0, _morgan.default)(morganFormat, {
+app.use((0, _morgan.default)("dev", {
   stream: _logger.default.stream
 })); // app.use(morgan(morganFormat, {
 //   skip: function(req, res){
