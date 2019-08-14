@@ -10,7 +10,7 @@ import redisRouter from './routes/redis';
 import morgan from 'morgan';
 import logger from './logger';
 
-const morganFormat = process.env.NODE_ENV !== "production" ? "dev" : "combinded";
+// const morganFormat = process.env.NODE_ENV !== "production" ? "dev" : "combinded";
 
 let app = express();
 
@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // app.use(morgan('dev'));
-app.use(morgan(morganFormat, {stream : logger.stream}))
+app.use(morgan("dev", {stream : logger.stream}))
 
 // app.use(morgan(morganFormat, {
 //   skip: function(req, res){
