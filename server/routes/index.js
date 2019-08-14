@@ -4,14 +4,13 @@ import mecab from 'mecab-ya';
 import cacheClient from '../src/database.js';
 import FUNC from '../src/common.js';
 import AWS from 'aws-sdk';
-import converter from 'aws-sdk/lib/dynamodb/converter.js';
+import logger from '../logger';
 
 AWS.config.update({
   region: "ap-northeast-2"
 });
 
 let dynamodb = new AWS.DynamoDB();
-const docClient = new AWS.DynamoDB.DocumentClient();
 
 let router = express.Router();
 
@@ -57,9 +56,9 @@ router.post('/getScheduleData', async (req, res) => {
         }else{
           turn = moment().add(-2, 'hours').format('HH');
         }
-        console.log('날짜 : ', date);
-        console.log('crawl_turn : ', turn);
-        console.log('-----------------');
+        // console.log('날짜 : ', date);
+        // console.log('crawl_turn : ', turn);
+        // console.log('-----------------');
 
         let params = {
           TableName : "CrawlHsmoaSchedule",
@@ -76,11 +75,11 @@ router.post('/getScheduleData', async (req, res) => {
         
         dynamodb.query(params, function(err, data){
           if(err){
-            console.log('에러',err);
+            console.log(err);
             reject();
           }else{
-            console.log(date + '----- 성공!!');
-            console.log(data.Items.length);
+            // console.log(date + '----- 성공!!');
+            // console.log(data.Items.length);
             let item = data.Items.map((item) => {
               return AWS.DynamoDB.Converter.unmarshall(item)
             })
@@ -139,7 +138,6 @@ router.post('/getTargeteData', async (req, res) => {
             console.log(err);
             reject();
           }else{
-            console.log(date + '----- 성공!!');
             let item = data.Items.map((item) => {
               return AWS.DynamoDB.Converter.unmarshall(item)
             })

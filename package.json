@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "clean": "rm -rf build public/js/bundle.js",
-    "start_dev": "NODE_ENV=dev node ./build/bin/www.js",
-    "start": "NODE_ENV=production node ./build/bin/www.js",
+    "start_dev": "NODE_ENV=dev node ./build/bin/www",
+    "start": "NODE_ENV=production node ./build/bin/www",
     "build": "babel server --out-dir build --copy-files && ./node_modules/.bin/webpack"
   },
   "dependencies": {
@@ -35,7 +35,9 @@
     "redis": "^2.8.0",
     "request": "^2.88.0",
     "vue": "^2.6.9",
-    "vuetify": "^1.5.6"
+    "vuetify": "^1.5.6",
+    "winston": "^3.2.1",
+    "winston-daily-rotate-file": "^3.10.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",

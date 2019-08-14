@@ -277,20 +277,20 @@ function readS3weightedRate(start, end) {
 function calculateWeight(schedule, rate) {
   rate = JSON.parse(rate);
   schedule.forEach(function (item) {
-    var start = item.start_time.replace(":", "");
-    var end = item.end_time.replace(":", "");
+    var start = makeTwoDigit(item.start_time);
+    var end = makeTwoDigit(item.end_time);
     var weighted_min, real_min;
 
     if (start > end) {
       var date = (0, _moment.default)(item.date).format('YYYYMMDD');
       var pre_date = (0, _moment.default)(item.date).add(-1, 'day').format('YYYYMMDD');
-      weighted_min = calWeightMin(pre_date, start, "2359") + calWeightMin(date, "0000", end);
+      weighted_min = calWeightMin(item.item, pre_date, start, "2359") + calWeightMin(item.item, date, "0000", end);
       pre_date = (0, _moment.default)(pre_date).format('YYYY-MM-DD');
       real_min = calRealMin(item.start_time, item.end_time, item.date, pre_date);
     } else {
       var _date = (0, _moment.default)(item.date).format('YYYYMMDD');
 
-      weighted_min = calWeightMin(_date, start, end);
+      weighted_min = calWeightMin(item.item, _date, start, end);
       real_min = calRealMin(item.start_time, item.end_time, item.date);
     }
 
@@ -298,7 +298,17 @@ function calculateWeight(schedule, rate) {
     item.real_min = real_min;
   });
 
-  function calWeightMin(date, start, end) {
+  function makeTwoDigit(time) {
+    var start_time = time.split(':');
+
+    if (parseInt(start_time[0]) < 10) {
+      start_time[0] = '0' + parseInt(start_time[0]);
+    }
+
+    return "".concat(start_time[0]).concat(start_time[1]);
+  }
+
+  function calWeightMin(nm, date, start, end) {
     // console.log(date);
     // console.log(rate);
     var weighted_min = rate[date].reduce(function (result, val) {

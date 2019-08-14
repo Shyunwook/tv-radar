@@ -20,14 +20,13 @@ var _common = _interopRequireDefault(require("../src/common.js"));
 
 var _awsSdk = _interopRequireDefault(require("aws-sdk"));
 
-var _converter = _interopRequireDefault(require("aws-sdk/lib/dynamodb/converter.js"));
+var _logger = _interopRequireDefault(require("../logger"));
 
 _awsSdk.default.config.update({
   region: "ap-northeast-2"
 });
 
 var dynamodb = new _awsSdk.default.DynamoDB();
-var docClient = new _awsSdk.default.DynamoDB.DocumentClient();
 
 var router = _express.default.Router();
 
@@ -119,11 +118,11 @@ function () {
                               turn = "23";
                             } else {
                               turn = (0, _moment.default)().add(-2, 'hours').format('HH');
-                            }
+                            } // console.log('날짜 : ', date);
+                            // console.log('crawl_turn : ', turn);
+                            // console.log('-----------------');
 
-                            console.log('날짜 : ', date);
-                            console.log('crawl_turn : ', turn);
-                            console.log('-----------------');
+
                             params = {
                               TableName: "CrawlHsmoaSchedule",
                               IndexName: "date-crawl_turn-index",
@@ -142,11 +141,11 @@ function () {
                             };
                             dynamodb.query(params, function (err, data) {
                               if (err) {
-                                console.log('에러', err);
+                                console.log(err);
                                 reject();
                               } else {
-                                console.log(date + '----- 성공!!');
-                                console.log(data.Items.length);
+                                // console.log(date + '----- 성공!!');
+                                // console.log(data.Items.length);
                                 var item = data.Items.map(function (item) {
                                   return _awsSdk.default.DynamoDB.Converter.unmarshall(item);
                                 });
@@ -155,7 +154,7 @@ function () {
                               }
                             });
 
-                          case 7:
+                          case 4:
                           case "end":
                             return _context2.stop();
                         }
@@ -246,7 +245,6 @@ function () {
                       console.log(err);
                       reject();
                     } else {
-                      console.log(date + '----- 성공!!');
                       var item = data.Items.map(function (item) {
                         return _awsSdk.default.DynamoDB.Converter.unmarshall(item);
                       });

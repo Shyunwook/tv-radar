@@ -195,22 +195,23 @@ function calculateWeight(schedule,rate){
   rate = JSON.parse(rate);
 
   schedule.forEach((item) => {
-    let start = item.start_time.replace(":","");
-    let end = item.end_time.replace(":","");
+    let start = makeTwoDigit(item.start_time);
+    let end = makeTwoDigit(item.end_time);
     let weighted_min, real_min;
 
     if(start > end){
       let date = moment(item.date).format('YYYYMMDD');
       let pre_date = moment(item.date).add(-1,'day').format('YYYYMMDD');
 
-      weighted_min = calWeightMin(pre_date,start,"2359") + calWeightMin(date,"0000",end);
+      weighted_min = calWeightMin(item.item, pre_date,start,"2359") + calWeightMin(item.item, date,"0000",end);
 
       pre_date = moment(pre_date).format('YYYY-MM-DD');
       real_min = calRealMin(item.start_time, item.end_time, item.date, pre_date);
     }else{
       let date = moment(item.date).format('YYYYMMDD');
 
-      weighted_min = calWeightMin(date,start,end);
+      weighted_min = calWeightMin(item.item,date,start,end);
+
       real_min = calRealMin(item.start_time, item.end_time, item.date);
     }
 
@@ -218,7 +219,15 @@ function calculateWeight(schedule,rate){
     item.real_min = real_min;
   })
 
-  function calWeightMin(date, start, end){
+  function makeTwoDigit(time){
+    let start_time = time.split(':');
+    if(parseInt(start_time[0]) < 10){
+      start_time[0] = '0' + parseInt(start_time[0]);
+    }
+    return `${start_time[0]}${start_time[1]}`
+  }
+
+  function calWeightMin(nm, date, start, end){
     // console.log(date);
     // console.log(rate);
     let weighted_min = rate[date].reduce((result,val) => {
@@ -257,7 +266,6 @@ function setPreDay(date,pre_day_flag){
 function setGroupedData(param){
   return new Promise((resolve, reject) => {
     let weighted_data = param.weighted_data;
-
     let grouped_weight_data = {
       other : [],
       gsshop : []
