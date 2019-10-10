@@ -100,7 +100,6 @@ router.post('/getScheduleData', async (req, res) => {
 router.post('/getTargeteData', async (req, res) => {
   let period = {dateFrom : req.body.dateFrom, dateTo : req.body.dateTo};
   let items = [];
-  let start_date = moment('2019-04-01','YYYY-MM-DD').format('YYYY-MM-DD');
   let promise = [];
   let diff = moment(period.dateTo, 'YYYY-MM-DD').diff(moment(period.dateFrom, 'YYYY-MM-DD'), 'days');
 
@@ -158,6 +157,70 @@ router.post('/getTargeteData', async (req, res) => {
   }).catch((error) => {
     console.log(error);
   });
+});
+
+router.get('/getPeriodData/:dateFrom&:dateTo', async(req, res) => {
+  let items = [];
+  let start_date = moment(req.params.dateFrom,'YYYY-MM-DD').format('YYYY-MM-DD');
+  let end_date = moment(req.params.dateTo,'YYYY-MM-DD').format('YYYY-MM-DD');
+  let diff = moment(end_date).diff(moment(start_date), 'days');
+  let promise = [];
+  for(let i = 0; i <= diff; i ++ ){
+
+    let func = (function(date){
+      return new Promise(async (resolve, reject) => {
+        let turn;
+        let diff = moment().diff(moment(date), 'days');
+
+        if(diff > 0){
+          turn = "23";
+        }else{
+          turn = moment().add(-2, 'hours').format('HH');
+        }
+        // console.log('날짜 : ', date);
+        // console.log('crawl_turn : ', turn);
+        // console.log('-----------------');
+
+        let params = {
+          TableName : "CrawlHsmoaSchedule",
+          IndexName: "date-crawl_turn-index",
+          KeyConditionExpression : "#d = :d and crawl_turn = :t",
+          ExpressionAttributeNames : { 
+              "#d" : "date",
+          },
+          ExpressionAttributeValues: {
+              ":d" : {"S" : date},
+              ":t" : {"S" : turn}
+          }
+        }
+        
+        dynamodb.query(params, function(err, data){
+          if(err){
+            console.log(err);
+            reject();
+          }else{
+            // console.log(date + '----- 성공!!');
+            // console.log(data.Items.length);
+            let item = data.Items.map((item) => {
+              return AWS.DynamoDB.Converter.unmarshall(item)
+            })
+            items = [...items, ...item];
+            resolve();
+          }
+        });
+      });
+    })(moment(start_date, 'YYYY-MM-DD').add(i, 'days').format('YYYY-MM-DD'));
+
+    promise.push(func);
+  }
+
+  await Promise.all(promise);
+  res.send(items);
+})
+
+router.get('/readDic', async (req, res) => {
+  let result = await FUNC.readDic();
+  res.send(result);
 });
 
 // router.post('/getLowerItem', wrap(async(req, res) => {

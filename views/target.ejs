@@ -66,6 +66,7 @@
 
         <v-layout class="func_area">
           <p class="selected_period" data-date="">기간을 선택해 주세요</p>
+          <!-- <button @click="periodDataDown">런치디어택티드</button> -->
           <v-layout class="right_content">
             <button id="excel_download" class="tareget_excel" v-if="download" @click="excelDownload">엑셀 다운로드</button>
           </v-layout>
@@ -87,7 +88,8 @@
               </template>
 
               <template slot="items" slot-scope="props">
-                <tr :active="props.selected" @click.stop="$set(dialog, props.item.name, true)">
+                <!-- <tr :active="props.selected" @click.stop="$set(dialog, props.item.name, true)"> -->
+                <tr :active="props.selected" @click.stop="test(props)">
                   <td class="text-xs-right">{{(props.index+1)+(pagination.page-1)*pagination.rowsPerPage}}</td>
                   <td class="text-xs-right">{{ props.item.shop }}</td>
                   <td class="text-xs-right target_img">

@@ -100,7 +100,19 @@ module.exports = (() => {
           }
         })
       })
+    },
+    readDic : function(){
+      return new Promise((resolve, reject) => {
+        fs.readFile(__dirname + '/dic.txt', "utf8", (err, dic) => {
+          if(err){
+            reject("File read problem....");
+          }else{
+            resolve(dic);
+          }
+        })
+      })
     }
+
   }
 })();
 

@@ -195,7 +195,7 @@ function () {
   var _ref4 = (0, _asyncToGenerator2.default)(
   /*#__PURE__*/
   _regenerator.default.mark(function _callee4(req, res) {
-    var period, items, start_date, promise, diff, i, func;
+    var period, items, promise, diff, i, func;
     return _regenerator.default.wrap(function _callee4$(_context4) {
       while (1) {
         switch (_context4.prev = _context4.next) {
@@ -205,7 +205,6 @@ function () {
               dateTo: req.body.dateTo
             };
             items = [];
-            start_date = (0, _moment.default)('2019-04-01', 'YYYY-MM-DD').format('YYYY-MM-DD');
             promise = [];
             diff = (0, _moment.default)(period.dateTo, 'YYYY-MM-DD').diff((0, _moment.default)(period.dateFrom, 'YYYY-MM-DD'), 'days');
 
@@ -258,17 +257,17 @@ function () {
               promise.push(func);
             }
 
-            _context4.next = 8;
+            _context4.next = 7;
             return Promise.all(promise);
 
-          case 8:
+          case 7:
             _common.default.setScheduleData(period, items).then(function (result) {
               res.send(result);
             }).catch(function (error) {
               console.log(error);
             });
 
-          case 9:
+          case 8:
           case "end":
             return _context4.stop();
         }
@@ -278,6 +277,143 @@ function () {
 
   return function (_x8, _x9) {
     return _ref4.apply(this, arguments);
+  };
+}());
+router.get('/getPeriodData/:dateFrom&:dateTo',
+/*#__PURE__*/
+function () {
+  var _ref5 = (0, _asyncToGenerator2.default)(
+  /*#__PURE__*/
+  _regenerator.default.mark(function _callee6(req, res) {
+    var items, start_date, end_date, diff, promise, i, func;
+    return _regenerator.default.wrap(function _callee6$(_context6) {
+      while (1) {
+        switch (_context6.prev = _context6.next) {
+          case 0:
+            items = [];
+            start_date = (0, _moment.default)(req.params.dateFrom, 'YYYY-MM-DD').format('YYYY-MM-DD');
+            end_date = (0, _moment.default)(req.params.dateTo, 'YYYY-MM-DD').format('YYYY-MM-DD');
+            diff = (0, _moment.default)(end_date).diff((0, _moment.default)(start_date), 'days');
+            promise = [];
+
+            for (i = 0; i <= diff; i++) {
+              func = function (date) {
+                return new Promise(
+                /*#__PURE__*/
+                function () {
+                  var _ref6 = (0, _asyncToGenerator2.default)(
+                  /*#__PURE__*/
+                  _regenerator.default.mark(function _callee5(resolve, reject) {
+                    var turn, diff, params;
+                    return _regenerator.default.wrap(function _callee5$(_context5) {
+                      while (1) {
+                        switch (_context5.prev = _context5.next) {
+                          case 0:
+                            diff = (0, _moment.default)().diff((0, _moment.default)(date), 'days');
+
+                            if (diff > 0) {
+                              turn = "23";
+                            } else {
+                              turn = (0, _moment.default)().add(-2, 'hours').format('HH');
+                            } // console.log('날짜 : ', date);
+                            // console.log('crawl_turn : ', turn);
+                            // console.log('-----------------');
+
+
+                            params = {
+                              TableName: "CrawlHsmoaSchedule",
+                              IndexName: "date-crawl_turn-index",
+                              KeyConditionExpression: "#d = :d and crawl_turn = :t",
+                              ExpressionAttributeNames: {
+                                "#d": "date"
+                              },
+                              ExpressionAttributeValues: {
+                                ":d": {
+                                  "S": date
+                                },
+                                ":t": {
+                                  "S": turn
+                                }
+                              }
+                            };
+                            dynamodb.query(params, function (err, data) {
+                              if (err) {
+                                console.log(err);
+                                reject();
+                              } else {
+                                // console.log(date + '----- 성공!!');
+                                // console.log(data.Items.length);
+                                var item = data.Items.map(function (item) {
+                                  return _awsSdk.default.DynamoDB.Converter.unmarshall(item);
+                                });
+                                items = [].concat((0, _toConsumableArray2.default)(items), (0, _toConsumableArray2.default)(item));
+                                resolve();
+                              }
+                            });
+
+                          case 4:
+                          case "end":
+                            return _context5.stop();
+                        }
+                      }
+                    }, _callee5);
+                  }));
+
+                  return function (_x12, _x13) {
+                    return _ref6.apply(this, arguments);
+                  };
+                }());
+              }((0, _moment.default)(start_date, 'YYYY-MM-DD').add(i, 'days').format('YYYY-MM-DD'));
+
+              promise.push(func);
+            }
+
+            _context6.next = 8;
+            return Promise.all(promise);
+
+          case 8:
+            res.send(items);
+
+          case 9:
+          case "end":
+            return _context6.stop();
+        }
+      }
+    }, _callee6);
+  }));
+
+  return function (_x10, _x11) {
+    return _ref5.apply(this, arguments);
+  };
+}());
+router.get('/readDic',
+/*#__PURE__*/
+function () {
+  var _ref7 = (0, _asyncToGenerator2.default)(
+  /*#__PURE__*/
+  _regenerator.default.mark(function _callee7(req, res) {
+    var result;
+    return _regenerator.default.wrap(function _callee7$(_context7) {
+      while (1) {
+        switch (_context7.prev = _context7.next) {
+          case 0:
+            _context7.next = 2;
+            return _common.default.readDic();
+
+          case 2:
+            result = _context7.sent;
+            res.send(result);
+
+          case 4:
+          case "end":
+            return _context7.stop();
+        }
+      }
+    }, _callee7);
+  }));
+
+  return function (_x14, _x15) {
+    return _ref7.apply(this, arguments);
   };
 }()); // router.post('/getLowerItem', wrap(async(req, res) => {
 //   let name = req.body.name;

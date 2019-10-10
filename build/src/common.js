@@ -145,6 +145,17 @@ module.exports = function () {
           }
         });
       });
+    },
+    readDic: function readDic() {
+      return new Promise(function (resolve, reject) {
+        _fs.default.readFile(__dirname + '/dic.txt', "utf8", function (err, dic) {
+          if (err) {
+            reject("File read problem....");
+          } else {
+            resolve(dic);
+          }
+        });
+      });
     }
   };
 }();
