@@ -88,8 +88,8 @@
               </template>
 
               <template slot="items" slot-scope="props">
-                <!-- <tr :active="props.selected" @click.stop="$set(dialog, props.item.name, true)"> -->
-                <tr :active="props.selected" @click.stop="test(props)">
+                <tr :active="props.selected" @click.stop="$set(dialog, props.item.name, true)">
+                <!-- <tr :active="props.selected" @click.stop="test(props)"> -->
                   <td class="text-xs-right">{{(props.index+1)+(pagination.page-1)*pagination.rowsPerPage}}</td>
                   <td class="text-xs-right">{{ props.item.shop }}</td>
                   <td class="text-xs-right target_img">
