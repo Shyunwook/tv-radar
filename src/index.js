@@ -135,7 +135,7 @@ function exportCSVFile(headers, items, fileTitle) {
   }
 }
 
-function download() {
+function download(filter, gs_data) {
   var headers = {
     name: '방송명',
     brand: "브랜드",
@@ -145,8 +145,12 @@ function download() {
     category: "카테고리",
     count: "방송횟수"
   };
-  var itemsNotFormatted = down_data;
+  var itemsNotFormatted = [...down_data];
   var itemsFormatted = [];
+
+  if(filter === "가전·디지털"){
+    headers.division = "세분류";
+  }
 
   // format the data
   itemsNotFormatted.forEach((item) => {
@@ -159,10 +163,13 @@ function download() {
       category: item.category,
       count: item.count
     });
+
+    if(filter === "가전·디지털"){
+      itemsFormatted[itemsFormatted.length - 1].division = item.division;
+    }
+
   });
-
   var fileTitle = 'orders'; // or 'my-unique-title'
-
   exportCSVFile(headers, itemsFormatted, fileTitle); // call the exportCSVFile() function to process the JSON and trigger the download
 }
 
@@ -293,11 +300,16 @@ let allRank = Vue.component('rank-component', {
       if (this.filters["category"] === undefined) {
         this.filters["category"] = '';
       }
-      return this.other_name_gruop_data.filter(d => {
+
+      let filtered_other_data = this.other_name_gruop_data.filter(d => {
         return Object.keys(this.filters).every(f => {
           return this.filters[f].length < 1 || this.filters[f].includes(d[f]);
         })
-      })
+      });
+
+      down_data = filtered_other_data;
+
+      return filtered_other_data;
     }
   },
   methods: {
@@ -439,7 +451,7 @@ let allRank = Vue.component('rank-component', {
       }
     },
     excelDownload: function () {
-      download();
+      download(this.filters.category, this.filtered_gs_data);
     },
     // 특정 기간 데이터 엑셀로 받기 위한 API
     // periodDataDown: function(){ 

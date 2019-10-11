@@ -385,36 +385,6 @@ function () {
   return function (_x10, _x11) {
     return _ref5.apply(this, arguments);
   };
-}());
-router.get('/readDic',
-/*#__PURE__*/
-function () {
-  var _ref7 = (0, _asyncToGenerator2.default)(
-  /*#__PURE__*/
-  _regenerator.default.mark(function _callee7(req, res) {
-    var result;
-    return _regenerator.default.wrap(function _callee7$(_context7) {
-      while (1) {
-        switch (_context7.prev = _context7.next) {
-          case 0:
-            _context7.next = 2;
-            return _common.default.readDic();
-
-          case 2:
-            result = _context7.sent;
-            res.send(result);
-
-          case 4:
-          case "end":
-            return _context7.stop();
-        }
-      }
-    }, _callee7);
-  }));
-
-  return function (_x14, _x15) {
-    return _ref7.apply(this, arguments);
-  };
 }()); // router.post('/getLowerItem', wrap(async(req, res) => {
 //   let name = req.body.name;
 //   let date = req.body.date;

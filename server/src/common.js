@@ -10,10 +10,13 @@ module.exports = (() => {
       return new Promise((resolve, reject) => {
         (async () => {
           let weighted_data = getweightedRate(period, data);
-          let dic = readBrandDictionary();
+          let dic = readDictionary("brand-dictionary");
+          let division_dic = readDictionary("dic");
+          
           let obj = {
             dic : await dic,
-            weighted_data : await weighted_data
+            weighted_data : await weighted_data,
+            division_dic : await division_dic
           }
 
           let grouped_weight_data =  await setGroupedData(obj);
@@ -100,19 +103,7 @@ module.exports = (() => {
           }
         })
       })
-    },
-    readDic : function(){
-      return new Promise((resolve, reject) => {
-        fs.readFile(__dirname + '/dic.txt', "utf8", (err, dic) => {
-          if(err){
-            reject("File read problem....");
-          }else{
-            resolve(dic);
-          }
-        })
-      })
     }
-
   }
 })();
 
@@ -297,6 +288,10 @@ function setGroupedData(param){
         history : []
       }
 
+      if(value.category == "가전·디지털"){
+        obj.division = getDivision(value.item, param.division_dic);
+      }
+
       if(value.shop==='gsshop'||value.shop==='gsmyshop'){
         if(!result["gsshop"][value.item]){
           result['gsshop'][value.item] = obj;
@@ -342,9 +337,21 @@ function getBrandName(item_name,dictionary){
   return "😥😥😥";
 }
 
-function readBrandDictionary(){
+function getDivision(item_name,dictionary){
+  let div_list = dictionary.split("\n");
+  let len = div_list.length;
+
+  for(let i = 0; i < len; i ++){
+    if(item_name.indexOf(div_list[i]) > -1){
+      return div_list[i];
+    }
+  }
+  return "";
+}
+
+function readDictionary(file){
   return new Promise((resolve, reject) => {
-    fs.readFile(__dirname + '/brand-dictionary.txt', "utf8", (err, dic) => {
+    fs.readFile(__dirname + `/${file}.txt`, "utf8", (err, dic) => {
       if(err){
         reject("File read problem....");
       }else{

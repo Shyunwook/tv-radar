@@ -23,31 +23,38 @@ module.exports = function () {
         (0, _asyncToGenerator2.default)(
         /*#__PURE__*/
         _regenerator.default.mark(function _callee() {
-          var weighted_data, dic, obj, grouped_weight_data, result;
+          var weighted_data, dic, division_dic, obj, grouped_weight_data, result;
           return _regenerator.default.wrap(function _callee$(_context) {
             while (1) {
               switch (_context.prev = _context.next) {
                 case 0:
                   weighted_data = getweightedRate(period, data);
-                  dic = readBrandDictionary();
-                  _context.next = 4;
+                  dic = readDictionary("brand-dictionary");
+                  division_dic = readDictionary("dic");
+                  _context.next = 5;
                   return dic;
 
-                case 4:
+                case 5:
                   _context.t0 = _context.sent;
-                  _context.next = 7;
+                  _context.next = 8;
                   return weighted_data;
 
-                case 7:
+                case 8:
                   _context.t1 = _context.sent;
-                  obj = {
-                    dic: _context.t0,
-                    weighted_data: _context.t1
-                  };
                   _context.next = 11;
-                  return setGroupedData(obj);
+                  return division_dic;
 
                 case 11:
+                  _context.t2 = _context.sent;
+                  obj = {
+                    dic: _context.t0,
+                    weighted_data: _context.t1,
+                    division_dic: _context.t2
+                  };
+                  _context.next = 15;
+                  return setGroupedData(obj);
+
+                case 15:
                   grouped_weight_data = _context.sent;
                   result = {
                     result: data,
@@ -56,7 +63,7 @@ module.exports = function () {
                   };
                   resolve(result);
 
-                case 14:
+                case 18:
                 case "end":
                   return _context.stop();
               }
@@ -142,17 +149,6 @@ module.exports = function () {
           } else {
             console.log(response.statusCode);
             reject(Error('wrong status code...'));
-          }
-        });
-      });
-    },
-    readDic: function readDic() {
-      return new Promise(function (resolve, reject) {
-        _fs.default.readFile(__dirname + '/dic.txt', "utf8", function (err, dic) {
-          if (err) {
-            reject("File read problem....");
-          } else {
-            resolve(dic);
           }
         });
       });
@@ -376,6 +372,10 @@ function setGroupedData(param) {
         history: []
       };
 
+      if (value.category == "가전·디지털") {
+        obj.division = getDivision(value.item, param.division_dic);
+      }
+
       if (value.shop === 'gsshop' || value.shop === 'gsmyshop') {
         if (!result["gsshop"][value.item]) {
           result['gsshop'][value.item] = obj;
@@ -431,9 +431,22 @@ function getBrandName(item_name, dictionary) {
   return "😥😥😥";
 }
 
-function readBrandDictionary() {
+function getDivision(item_name, dictionary) {
+  var div_list = dictionary.split("\n");
+  var len = div_list.length;
+
+  for (var i = 0; i < len; i++) {
+    if (item_name.indexOf(div_list[i]) > -1) {
+      return div_list[i];
+    }
+  }
+
+  return "";
+}
+
+function readDictionary(file) {
   return new Promise(function (resolve, reject) {
-    _fs.default.readFile(__dirname + '/brand-dictionary.txt', "utf8", function (err, dic) {
+    _fs.default.readFile(__dirname + "/".concat(file, ".txt"), "utf8", function (err, dic) {
       if (err) {
         reject("File read problem....");
       } else {

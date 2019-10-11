@@ -217,12 +217,6 @@ router.get('/getPeriodData/:dateFrom&:dateTo', async(req, res) => {
   await Promise.all(promise);
   res.send(items);
 })
-
-router.get('/readDic', async (req, res) => {
-  let result = await FUNC.readDic();
-  res.send(result);
-});
-
 // router.post('/getLowerItem', wrap(async(req, res) => {
 //   let name = req.body.name;
 //   let date = req.body.date;
